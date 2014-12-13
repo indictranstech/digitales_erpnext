@@ -16,6 +16,9 @@ cur_frm.cscript.load_defaults = function(doc, dt, dn) {
 cur_frm.add_fetch('lead_name', 'company_name', 'customer_name');
 cur_frm.add_fetch('default_sales_partner','commission_rate','default_commission_rate');
 
+cur_frm.add_fetch('name1','process_type','process_type');
+cur_frm.add_fetch('name1','charge','charge');
+
 cur_frm.cscript.refresh = function(doc, dt, dn) {
 	cur_frm.cscript.setup_dashboard(doc);
 

@@ -225,6 +225,22 @@
    "permlevel": 0
   }, 
   {
+   "fieldname": "section_break_24", 
+   "fieldtype": "Section Break", 
+   "hidden": 1, 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "so_item_detail", 
+   "fieldtype": "Table", 
+   "hidden": 0, 
+   "label": "SO Item Detail", 
+   "options": "SO Item Details", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "sb_last_purchase", 
    "fieldtype": "Section Break", 
    "permlevel": 0
@@ -685,8 +701,7 @@
    "label": "Recurring Type", 
    "no_copy": 1, 
    "options": "Monthly\nQuarterly\nHalf-yearly\nYearly", 
-   "permlevel": 0, 
-   "print_hide": 1
+   "permlevel": 0
   }, 
   {
    "allow_on_submit": 1, 
@@ -696,8 +711,7 @@
    "fieldtype": "Date", 
    "label": "From Date", 
    "no_copy": 1, 
-   "permlevel": 0, 
-   "print_hide": 1
+   "permlevel": 0
   }, 
   {
    "allow_on_submit": 1, 
@@ -707,8 +721,7 @@
    "fieldtype": "Date", 
    "label": "To Date", 
    "no_copy": 1, 
-   "permlevel": 0, 
-   "print_hide": 1
+   "permlevel": 0
   }, 
   {
    "allow_on_submit": 1, 
@@ -775,7 +788,7 @@
  "icon": "icon-file-text", 
  "idx": 1, 
  "is_submittable": 1, 
- "modified": "2014-11-27 17:27:38.839440", 
+ "modified": "2014-12-12 19:07:19.570622", 
  "modified_by": "Administrator", 
  "module": "Buying", 
  "name": "Purchase Order", 
