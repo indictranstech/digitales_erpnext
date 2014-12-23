@@ -174,7 +174,7 @@
    "reqd": 1
   }, 
   {
-   "default": "Own  - D", 
+   "default": "", 
    "depends_on": "", 
    "description": "Mandatory if Stock Item is \"Yes\". Also the default warehouse where reserved quantity is set from Sales Order.", 
    "fieldname": "default_warehouse", 
@@ -825,7 +825,7 @@
  "icon": "icon-tag", 
  "idx": 1, 
  "max_attachments": 1, 
- "modified": "2014-12-12 20:28:46.473763", 
+ "modified": "2014-12-23 00:33:58.660437", 
  "modified_by": "Administrator", 
  "module": "Stock", 
  "name": "Item", 

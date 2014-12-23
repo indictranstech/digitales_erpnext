@@ -73,9 +73,9 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 						return item.delivery_note ? true : false;
 					});
 
-				if(!from_delivery_note) {
-					cur_frm.appframe.add_primary_action(__('Make Delivery'), cur_frm.cscript['Make Delivery Note'], "icon-truck")
-				}
+				// if(!from_delivery_note) {
+				// 	cur_frm.appframe.add_primary_action(__('Make Delivery'), cur_frm.cscript['Make Delivery Note'], "icon-truck")
+				// }
 			}
 
 			if(doc.outstanding_amount!=0) {
@@ -93,6 +93,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 	sales_order_btn: function() {
 		this.$sales_order_btn = cur_frm.appframe.add_primary_action(__('From Sales Order'),
 			function() {
+
 				frappe.model.map_current_doc({
 					method: "erpnext.selling.doctype.sales_order.sales_order.make_sales_invoice",
 					source_doctype: "Sales Order",
@@ -102,6 +103,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 						per_billed: ["<", 99.99],
 						customer: cur_frm.doc.customer || undefined,
 						company: cur_frm.doc.company
+						//process_status:'Uncompleted'
 					}
 				})
 			}, "icon-download", "btn-default");

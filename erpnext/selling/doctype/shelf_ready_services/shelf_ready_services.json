@@ -92,6 +92,29 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "contract_details", 
+   "fieldtype": "Section Break", 
+   "label": "Contract Details", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "contract_number", 
+   "fieldtype": "Data", 
+   "in_list_view": 1, 
+   "label": "Contract Number", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "tender_group", 
+   "fieldtype": "Data", 
+   "in_list_view": 1, 
+   "label": "Tender Group", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -101,7 +124,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2014-12-11 16:26:05.814921", 
+ "modified": "2014-12-23 15:14:49.872124", 
  "modified_by": "Administrator", 
  "module": "Selling", 
  "name": "Shelf Ready Services", 

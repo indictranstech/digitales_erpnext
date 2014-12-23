@@ -11,6 +11,7 @@ cur_frm.cscript.refresh = function(doc) {
 }
 
 cur_frm.cscript.sales_order = function(doc,cdt,cdn) {
+	//console.log("in sales_order")
 	var d = locals[cdt][cdn];
 	if (d.sales_order) {
 		return get_server_fields('get_so_details', d.sales_order, 'pp_so_details', doc, cdt, cdn, 1);

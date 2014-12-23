@@ -47,6 +47,11 @@ cur_frm.cscript.validate = function(doc, dt, dn) {
 	if(doc.lead_name) frappe.model.clear_doc("Lead", doc.lead_name);
 }
 
+cur_frm.get_field("contract_form_no").get_query=function(doc,cdt,cdn){
+	
+	return "select name from `tabCustomer Contract Form` where docstatus=1 and customer='"+doc.name+"'"
+}
+
 cur_frm.cscript.setup_dashboard = function(doc) {
 	cur_frm.dashboard.reset(doc);
 	if(doc.__islocal)

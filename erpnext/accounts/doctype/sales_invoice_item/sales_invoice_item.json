@@ -123,6 +123,14 @@
    "read_only": 1
   }, 
   {
+   "fieldname": "process", 
+   "fieldtype": "Data", 
+   "hidden": 1, 
+   "label": "Shelf Ready Service Name", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "base_price_list_rate", 
    "fieldtype": "Currency", 
    "label": "Price List Rate (Company Currency)", 
@@ -154,7 +162,7 @@
    "fieldname": "amount", 
    "fieldtype": "Currency", 
    "in_list_view": 1, 
-   "label": "Amount", 
+   "label": "Extended Rate", 
    "oldfieldname": "export_amount", 
    "oldfieldtype": "Currency", 
    "options": "currency", 
@@ -439,7 +447,7 @@
  ], 
  "idx": 1, 
  "istable": 1, 
- "modified": "2014-09-09 05:35:36.019576", 
+ "modified": "2014-12-16 20:15:55.960426", 
  "modified_by": "Administrator", 
  "module": "Accounts", 
  "name": "Sales Invoice Item", 

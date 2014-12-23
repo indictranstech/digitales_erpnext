@@ -199,3 +199,22 @@ cur_frm.cscript.send_sms = function() {
 	frappe.require("assets/erpnext/js/sms_manager.js");
 	var sms_man = new SMSManager(cur_frm.doc);
 };
+
+
+cur_frm.cscript.customer = function(doc, cdt, cdn){
+	//var d = locals[cdt][cdn];
+	if (doc.customer){
+		//console.log(doc.transaction_date)
+		var someDate = new Date();
+		var numberOfDaysToAdd = 6;
+		someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
+		var dd = someDate.getDate();
+		var mm = someDate.getMonth() + 1;
+		var y = someDate.getFullYear();
+		var someFormattedDate = y + '-'+ mm + '-'+ dd;
+		//console.log(someFormattedDate)
+		cur_frm.set_value('delivery_date',someFormattedDate)
+		refresh_field('delivery_date')
+	}
+	refresh_field('amount');
+}

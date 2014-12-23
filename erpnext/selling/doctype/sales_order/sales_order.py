@@ -159,8 +159,22 @@ class SalesOrder(SellingController):
 
 		frappe.get_doc('Authorization Control').validate_approving_authority(self.doctype, self.grand_total, self)
 
+		self.validate_contract(self.customer)
+
 		self.update_prevdoc_status('submit')
 		frappe.db.set(self, 'status', 'Submitted')
+
+	def validate_contract(self,customer):
+		contract_dates=frappe.db.sql("""select contract_start_date,contract_end_date
+										from `tabCustomer Contract Form` where Customer='%s'
+											 """%customer,as_list=1)
+		frappe.errprint(contract_dates[0][0])
+		frappe.errprint(contract_dates[0][1])
+		frappe.errprint(self.transaction_date)
+		if contract_dates[0][0] <= self.transaction_date <= contract_dates[0][1] :
+			pass
+		else:
+			frappe.msgprint("Selected customer contract is expired",raise_exception=1)
 
 	def on_cancel(self):
 		# Cannot cancel stopped SO
@@ -316,9 +330,53 @@ def make_delivery_note(source_name, target_doc=None):
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
 	def postprocess(source, target):
+
 		set_missing_values(source, target)
 		#Get the advance paid Journal Vouchers in Sales Invoice Advance
 		target.get_advances()
+		# To get process details against sales order for which you are generating sales invoice---------
+		if source.doctype=='Sales Order':
+			#frappe.errprint("in sales invocie")
+			get_shelf_service_details(source,source_name,target)
+
+	def get_shelf_service_details(source,source_name,target):
+		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
+				and docstatus=1 and sales_invoice_status='Not Done'"""%source_name,as_list=1)
+		if process:
+			#frappe.errprint(process)
+			for [name] in process:
+				create_sales_invoice_item_entry(name,target)
+		update_sales_order_process_status(source_name)
+
+
+	def update_process_entry(name):
+		frappe.db.sql("""update `tabProcess` set sales_invoice_status='Done' where
+				name='%s'"""%name)
+		frappe.db.commit()
+
+	def update_sales_order_process_status(source_name):
+		frappe.db.sql("""update `tabSales Order` set process_status='Completed' where
+				name='%s'"""%source_name)
+		frappe.db.commit()
+
+	def create_sales_invoice_item_entry(name,target):
+		service_details=frappe.db.sql("""select p.process_type, s.qty,s.charge,s.amount,s.process,s.file_name from `tabShelf Ready Service Details` s 
+			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
+		for i in service_details:
+			#frappe.errprint(target)
+			si = target.append('entries', {})
+			si.item_code=i[0]
+			si.item_name=i[0]
+			si.description=i[0]
+			si.qty=i[1]
+			si.rate=i[2]
+			si.amount=i[3]
+			si.shelf_ready_service_name=i[4]
+			si.marcfile_name=i[5]
+			si.sales_order=source_name
+			si.income_account='Sales - D'
+			si.cost_center='Main - D'
+			#update_process_entry(name)
 
 	def set_missing_values(source, target):
 		target.is_pos = 0
@@ -330,6 +388,8 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.amount = flt(source.amount) - flt(source.billed_amt)
 		target.base_amount = target.amount * flt(source_parent.conversion_rate)
 		target.qty = target.amount / flt(source.rate) if (source.rate and source.billed_amt) else source.qty
+
+	
 
 	doclist = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {

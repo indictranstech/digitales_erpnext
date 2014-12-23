@@ -3,6 +3,15 @@
 
 frappe.provide("erpnext.item");
 
+//cur_frm.add_fetch('item_group','own_warehouse','default_warehouse');
+
+cur_frm.cscript.item_group=function(doc, cdt, cdn){
+	
+	get_server_fields('get_own_warehouse', '' ,'', doc, cdt, cdn, 1);
+	refresh_field('default_warehouse');
+	//function(r,rt){refresh_field('shelf_ready_service_details')});
+}
+
 cur_frm.cscript.refresh = function(doc) {
 	// make sensitive fields(has_serial_no, is_stock_item, valuation_method)
 	// read only if any stock ledger entry exists

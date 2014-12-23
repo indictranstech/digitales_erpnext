@@ -273,6 +273,15 @@ class Item(WebsiteGenerator):
 					row.label = label
 					row.description = desc
 
+
+	def get_own_warehouse(self):
+		warehouse=frappe.db.sql("""select value from `tabSingles` where doctype='Configuration Page'
+					and field='own_warehouse'""",as_list=1)
+		return {
+			"default_warehouse":warehouse[0][0]
+		}
+
+
 def validate_end_of_life(item_code, end_of_life=None, verbose=1):
 	if not end_of_life:
 		end_of_life = frappe.db.get_value("Item", item_code, "end_of_life")

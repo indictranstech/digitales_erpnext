@@ -98,7 +98,7 @@ class PackingSlip(Document):
 				from `tabPacking Slip` ps, `tabPacking Slip Item` psi
 				where ps.name = psi.parent and ps.docstatus = 1
 				and ps.delivery_note = dni.parent and psi.item_code=dni.item_code) as packed_qty,
-			stock_uom, item_name
+			stock_uom, item_name,against_sales_order
 			from `tabDelivery Note Item` dni
 			where parent=%s %s
 			group by item_code""" % ("%s", condition),
@@ -149,6 +149,7 @@ class PackingSlip(Document):
 		self.set("item_details", [])
 
 		dn_details = self.get_details_for_packing()[0]
+		#frappe.errprint(dn_details)
 		for item in dn_details:
 			if flt(item.qty) > flt(item.packed_qty):
 				ch = self.append('item_details', {})
@@ -156,6 +157,8 @@ class PackingSlip(Document):
 				ch.item_name = item.item_name
 				ch.stock_uom = item.stock_uom
 				ch.qty = flt(item.qty) - flt(item.packed_qty)
+				ch.against_sales_order=item.against_sales_order
+				#frappe.errprint(ch.against_sales_order)
 		self.update_item_details()
 
 def item_details(doctype, txt, searchfield, start, page_len, filters):
