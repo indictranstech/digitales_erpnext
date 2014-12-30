@@ -258,6 +258,7 @@
   {
    "fieldname": "default_commission_rate", 
    "fieldtype": "Float", 
+   "hidden": 1, 
    "label": "Commission Rate", 
    "oldfieldname": "default_commission_rate", 
    "oldfieldtype": "Currency", 
@@ -266,6 +267,7 @@
   {
    "fieldname": "sales_team", 
    "fieldtype": "Table", 
+   "hidden": 1, 
    "label": "Sales Team Details", 
    "oldfieldname": "sales_team", 
    "oldfieldtype": "Table", 
@@ -284,7 +286,7 @@
  ], 
  "icon": "icon-user", 
  "idx": 1, 
- "modified": "2014-12-23 20:06:06.675206", 
+ "modified": "2014-12-25 20:43:47.169796", 
  "modified_by": "Administrator", 
  "module": "Selling", 
  "name": "Customer", 

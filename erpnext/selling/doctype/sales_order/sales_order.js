@@ -218,3 +218,23 @@ cur_frm.cscript.customer = function(doc, cdt, cdn){
 	}
 	refresh_field('amount');
 }
+
+
+
+cur_frm.cscript.priority = function(doc, cdt, cdn){
+	//var d = locals[cdt][cdn];
+	if (doc.priority){
+		//console.log(doc.transaction_date)
+		var someDate = new Date();
+		var numberOfDaysToAdd = 6;
+		someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
+		var dd = someDate.getDate();
+		var mm = someDate.getMonth() + 1;
+		var y = someDate.getFullYear();
+		var someFormattedDate = y + '-'+ mm + '-'+ dd;
+		//console.log(someFormattedDate)
+		cur_frm.set_value('delivery_date',someFormattedDate)
+		refresh_field('delivery_date')
+	}
+	refresh_field('amount');
+}

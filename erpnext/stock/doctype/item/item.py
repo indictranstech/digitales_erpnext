@@ -277,15 +277,13 @@ class Item(WebsiteGenerator):
 	def get_own_warehouse(self):
 		warehouse=frappe.db.sql("""select value from `tabSingles` where doctype='Configuration Page'
 					and field='own_warehouse'""",as_list=1,debug=1)
-		#frappe.errprint(warehouse)
-		if warehouse[0][0]:
-			#frappe.errprint("in if loop")
+		if warehouse:
 			return {
 				"default_warehouse":warehouse[0][0]
 			}
 
 		else:
-			#frappe.errprint("in else")
+			
 			frappe.msgprint("Please specify default own warehouse in Configuration Page",raise_exception=1)
 
 
