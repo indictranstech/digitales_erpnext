@@ -50,9 +50,52 @@ class Attendance(Document):
 		self.validate_att_date()
 		self.validate_duplicate_record()
 		self.check_leave_record()
+		
+	def validate_total_hours(self):
+		frappe.errprint(self.total_hours)
+		if self.total_hours<=7.30:
+			pass
+		else:
+			frappe.throw("Total Working hours for 1 day can not be greater than 7.30 hours")
 
 	def on_update(self):
 		# this is done because sometimes user entered wrong employee name
 		# while uploading employee attendance
 		employee_name = frappe.db.get_value("Employee", self.employee, "employee_name")
 		frappe.db.set(self, 'employee_name', employee_name)
+		self.validate_total_break_hours()
+
+	def validate_total_break_hours(self):
+		import datetime as dt
+		doc1 = frappe.get_doc("Attendance", self.name)
+		#frappe.errprint(doc1)
+		time = doc1.get('attendance_time_sheet')
+		break_time1=0.0
+		for i in range(0,len(time)):
+			if i+1 < len(time):
+				start_dt = dt.datetime.strptime(time[i].out_time, '%H:%M:%S')
+				#frappe.errprint(start_dt)
+				end_dt = dt.datetime.strptime(time[i+1].in_time, '%H:%M:%S')
+				#frappe.errprint(end_dt)
+				diff = (end_dt - start_dt)
+				#frappe.errprint(diff)
+				break_time=diff.seconds/60 
+				#frappe.errprint(break_time)
+				#break_time=break_time/60
+				break_time1=break_time1+break_time
+				#frappe.errprint(break_time1/60)
+		#doc1.total_break_hours=break_time1/60
+		#frappe.errprint(doc1.total_break_hours)
+		frappe.db.set_value("Attendance", self.name, "total_break_hours", break_time1/60)
+
+		#doc1.save(ignore_permissions=True)
+
+
+	def get_hours(self,args):
+		import datetime as dt
+		start_dt = dt.datetime.strptime(args['in_time'], '%H:%M:%S')
+		end_dt = dt.datetime.strptime(args['out_time'], '%H:%M:%S')
+		diff = (end_dt - start_dt) 
+		return{	
+		"hours": diff.seconds/60
+		}

@@ -50,7 +50,8 @@ class Employee(Document):
 			self.update_user_permissions()
 
 		self.update_dob_event()
-
+		if self.digitales_salary_structure =='No':
+			self.check_hour_rate
 	def update_user_permissions(self):
 		frappe.permissions.add_user_permission("Employee", self.name, self.user_id)
 		frappe.permissions.set_user_permission_if_allowed("Company", self.company, self.user_id)
@@ -173,6 +174,13 @@ class Employee(Document):
 		else:
 			frappe.db.sql("""delete from `tabEvent` where repeat_on='Every Year' and
 				ref_type='Employee' and ref_name=%s""", self.name)
+
+
+	def check_hour_rate(self):
+		if self.hour_rate:
+			pass
+		else:
+			frappe.throw("If Digitales salary structure is 'No' then Rate per hour for salary calculation is needed")
 
 @frappe.whitelist()
 def get_retirement_date(date_of_birth=None):

@@ -26,10 +26,15 @@ def get_data():
 					"name": "Attendance",
 					"description": _("Attendance record."),
 				},
+				# {
+				# 	"type": "doctype",
+				# 	"name": "Salary Slip",
+				# 	"description": _("Monthly salary statement."),
+				# },
 				{
 					"type": "doctype",
-					"name": "Salary Slip",
-					"description": _("Monthly salary statement."),
+					"name": "Digitales Salary Slip",
+					"description": _("Twoweekly slary statement."),
 				},
 				{
 					"type": "doctype",
@@ -52,9 +57,16 @@ def get_data():
 			"label": _("Tools"),
 			"icon": "icon-wrench",
 			"items": [
+				# {
+				# 	"type": "doctype",
+				# 	"name": "Salary Manager",
+				# 	"label": _("Process Payroll"),
+				# 	"description":_("Generate Salary Slips"),
+				# 	"hide_count": True
+				# },
 				{
 					"type": "doctype",
-					"name": "Salary Manager",
+					"name": "Digitales Salary Manager",
 					"label": _("Process Payroll"),
 					"description":_("Generate Salary Slips"),
 					"hide_count": True

@@ -20,6 +20,7 @@ erpnext.hr.EmployeeController = frappe.ui.form.Controller.extend({
 	},
 
 	refresh: function() {
+		hide_field('hour_rate')
 		var me = this;
 		erpnext.toggle_naming_series();
 		if(!this.frm.doc.__islocal && this.frm.doc.__onload &&
@@ -53,3 +54,11 @@ erpnext.hr.EmployeeController = frappe.ui.form.Controller.extend({
 	}
 });
 cur_frm.cscript = new erpnext.hr.EmployeeController({frm: cur_frm});
+
+cur_frm.cscript.digitales_salary_structure=function(doc,cdt,cdn){
+	
+	if(doc.digitales_salary_structure =='Yes')
+		hide_field('hour_rate');
+	else
+		unhide_field('hour_rate');
+}

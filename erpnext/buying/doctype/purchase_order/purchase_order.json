@@ -227,7 +227,7 @@
   {
    "fieldname": "section_break_24", 
    "fieldtype": "Section Break", 
-   "hidden": 0, 
+   "hidden": 1, 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -788,7 +788,7 @@
  "icon": "icon-file-text", 
  "idx": 1, 
  "is_submittable": 1, 
- "modified": "2014-12-13 17:19:12.725072", 
+ "modified": "2014-12-30 20:15:50.807027", 
  "modified_by": "Administrator", 
  "module": "Buying", 
  "name": "Purchase Order", 
