@@ -6,6 +6,20 @@ cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
 
 cur_frm.add_fetch('employee', 'hour_rate', 'hour_rate');
 
+cur_frm.add_fetch('employee', 'department', 'department');
+
+cur_frm.add_fetch('employee', 'branch', 'branch');
+
+cur_frm.add_fetch('employee', 'designation', 'designation');
+
+cur_frm.add_fetch('employee', 'bank_name', 'bank_name');
+
+cur_frm.add_fetch('employee', 'bank_ac_no', 'bank_ac_no');
+
+
+
+
+
 
 cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 	if (doc.from_date && doc.to_date)

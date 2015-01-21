@@ -66,6 +66,7 @@ class DigitalesSalaryManager(Document):
 			if not self.get(f):
 				frappe.throw(_("Please set {0}").format(f))
 
+
 	# def get_month_details(self, year, from_date,to_date):
 	# 	frappe.errprint("5 . get get_month_details")
 	# 	ysd = frappe.db.get_value("Fiscal Year", year, "year_start_date")
@@ -107,6 +108,9 @@ class DigitalesSalaryManager(Document):
 					"to_date": self.to_date,
 					"email_check": self.send_email,
 					"company": self.company,
+					"branch":self.branch,
+					"department":self.department,
+					"designation":self.designation,
 				})
 				frappe.errprint(ss)
 				ss.insert()
@@ -133,7 +137,7 @@ class DigitalesSalaryManager(Document):
 		frappe.errprint(cond)
 		ss_list = frappe.db.sql("""
 			select t1.name from `tabDigitales Salary Slip` t1
-			where t1.docstatus = 0 and from_date = %s and to_date = %s and fiscal_year = %s %s
+			where t1.docstatus = 0 and t1.from_date = %s and t1.to_date = %s and t1.fiscal_year = %s %s
 		""" % ('%s', '%s','%s', cond), (self.from_date,self.to_date, self.fiscal_year),debug=1)
 		return ss_list
 
@@ -144,6 +148,7 @@ class DigitalesSalaryManager(Document):
 			Submit all salary slips based on selected criteria
 		"""
 		ss_list = self.get_sal_slip_list()
+		frappe.errprint([ss_list,"salary slip"])
 		not_submitted_ss = []
 		for ss in ss_list:
 			ss_obj = frappe.get_doc("Digitales Salary Slip",ss[0])

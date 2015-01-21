@@ -76,13 +76,12 @@ class DigitalesSalarySlip(Document):
 			elif salary_structure[0][0]=='No':
 				rate=frappe.db.get_value("Employee",self.employee ,"hour_rate")
 				frappe.errprint(rate)
+				frappe.db.set(self, 'hour_rate', rate)
 				frappe.errprint(self.attendance_hours)
 				if rate:
-
 					self.create_sal_stucture(rate,self.attendance_hours)	
 				else:
 					frappe.throw("Hour rate is not mentioned for the employee='"+self.employee+"' in employee master")
-
 
 			else:
 				frappe.throw("Digitales Salary Structure {Yes,No} is not specified in Employee master")
@@ -177,10 +176,10 @@ class DigitalesSalarySlip(Document):
 
 	def get_attendance_days(self):
 		frappe.errprint("in attendance days")
-		d = getdate(self.to_date)- timedelta(days=1)
+		#d = getdate(self.to_date)- timedelta(days=1)
 		# frappe.errprint(d)
 		att_dates=frappe.db.sql("""select count(att_date),ifnull(sum(total_hours),0)from `tabAttendance` where docstatus=1 and status='Present'
-						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,d),debug=1)
+						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
 		frappe.errprint(att_dates)
 		if att_dates:
 
@@ -188,7 +187,7 @@ class DigitalesSalarySlip(Document):
 			attendance_hours=att_dates[0][1]
 
 		att_dates1=frappe.db.sql("""select count(att_date) ,ifnull(sum(total_hours),0) from `tabAttendance` where docstatus=1 and status='Half Day' 
-						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,d),debug=1)
+						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
 		frappe.errprint(att_dates1)
 		if att_dates1:
 			attendance_days=att_dates[0][0] + (att_dates1[0][0]*0.5)
@@ -328,10 +327,31 @@ class DigitalesSalarySlip(Document):
 
 
 	def validate_attendance(self):
-		d = getdate(self.to_date)- timedelta(days=1)
+		#d = getdate(self.to_date)- timedelta(days=1)
 		# frappe.errprint(d)
 		att_dates=frappe.db.sql("""select count(att_date) from `tabAttendance` where docstatus=1 and status='Present' 
-						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,d),debug=1)
+						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
 		# frappe.errprint(att_dates)
 		if att_dates:
 			frappe.throw("Total payment days for employee='%s' is '%s' and total attendance for the specified dates is '%s'"%(self.employee,self.payment_days,att_dates[0][0]))
+
+
+	def on_submit(self):
+		if(self.email_check == 1):
+			self.send_mail_funct()
+
+
+	def send_mail_funct(self):
+		from frappe.utils.email_lib import sendmail
+
+		receiver = frappe.db.get_value("Employee", self.employee, "company_email")
+		frappe.errprint(receiver)
+		if receiver:
+			subj = 'Salary Slip - ' + cstr(self.from_date) +'/'+cstr(self.to_date) 
+			sendmail([receiver], subject=subj, msg = _("Please see attachment"),
+				attachments=[{
+					"fname": self.name + ".pdf",
+					"fcontent": frappe.get_print_format(self.doctype, self.name, as_pdf = True)
+				}])
+		else:
+			msgprint(_("Company Email ID not found, hence mail not sent"))

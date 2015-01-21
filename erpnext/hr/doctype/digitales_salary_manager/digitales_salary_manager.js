@@ -19,7 +19,7 @@ cur_frm.cscript.create_salary_slip = function(doc, cdt, cdn) {
 }
 
 cur_frm.cscript.submit_salary_slip = function(doc, cdt, cdn) {
-	var check = confirm(__("Do you really want to Submit all Salary Slip for month {0} and year {1}", [doc.month, doc.fiscal_year]));
+	var check = confirm(__("Do you really want to Submit all Salary Slip for the dates from date {0} and to date {1} and year {2}", [doc.from_date,doc.to_date, doc.fiscal_year]));
 	if(check){
 		var callback = function(r, rt){
 			if (r.message)

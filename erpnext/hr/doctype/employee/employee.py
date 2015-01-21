@@ -51,7 +51,8 @@ class Employee(Document):
 
 		self.update_dob_event()
 		if self.digitales_salary_structure =='No':
-			self.check_hour_rate
+			#frappe.errprint("in digitales_salary_structure111")
+			self.check_hour_rate()
 	def update_user_permissions(self):
 		frappe.permissions.add_user_permission("Employee", self.name, self.user_id)
 		frappe.permissions.set_user_permission_if_allowed("Company", self.company, self.user_id)
@@ -177,6 +178,8 @@ class Employee(Document):
 
 
 	def check_hour_rate(self):
+		#frappe.errprint("in digitales_salary_structure")
+
 		if self.hour_rate:
 			pass
 		else:
