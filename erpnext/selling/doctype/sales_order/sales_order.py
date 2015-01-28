@@ -259,9 +259,6 @@ class SalesOrder(SellingController):
 				}
 				update_bin(args)
 
-	def on_update(self):
-		pass
-
 	def get_portal_page(self):
 		return "order" if self.docstatus==1 else None
 
@@ -340,6 +337,9 @@ def make_sales_invoice(source_name, target_doc=None):
 		if source.doctype=='Sales Order':
 			#frappe.errprint("in sales invocie")
 			get_shelf_service_details(source,source_name,target)
+			set_missing_values(source, target)
+			target.get_advances()
+			#update_item(source,target,source_parent)
 
 	def get_shelf_service_details(source,source_name,target):
 		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
@@ -348,6 +348,7 @@ def make_sales_invoice(source_name, target_doc=None):
 			#frappe.errprint(process)
 			for [name] in process:
 				create_sales_invoice_item_entry(name,target)
+				#update_process_entry()
 		update_sales_order_process_status(source_name)
 
 
@@ -378,6 +379,7 @@ def make_sales_invoice(source_name, target_doc=None):
 			si.sales_order=source_name
 			si.income_account='Sales - D'
 			si.cost_center='Main - D'
+			si.process_id= name
 			#update_process_entry(name)
 
 	def set_missing_values(source, target):

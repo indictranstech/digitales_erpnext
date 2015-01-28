@@ -49,7 +49,7 @@ cur_frm.cscript.validate = function(doc, dt, dn) {
 
 cur_frm.get_field("contract_form_no").get_query=function(doc,cdt,cdn){
 	
-	return "select name from `tabCustomer Contract Form` where docstatus=1 and customer='"+doc.name+"'"
+	return "select name from `tabCustomer Contract Form` where docstatus=1 and customer='"+doc.name+"' order by creation desc"
 }
 
 cur_frm.cscript.setup_dashboard = function(doc) {

@@ -164,10 +164,10 @@ var calculate_earning_total = function(doc, dt, dn) {
 
 	var total_earn = 0;
 	for(var i = 0; i < tbl.length; i++){
-		if(cint(tbl[i].e_depends_on_lwp) == 1) {
-			tbl[i].e_modified_amount = Math.round(tbl[i].e_amount)*(flt(doc.payment_days)/cint(doc.total_days_in_month)*100)/100;			
-			refresh_field('e_modified_amount', tbl[i].name, 'earning_details');
-		}
+		//if(cint(tbl[i].e_depends_on_lwp) == 1) {
+		tbl[i].e_modified_amount = Math.round(tbl[i].e_amount)*(flt(doc.payment_days)/cint(doc.total_days_in_month)*100)/100;			
+		refresh_field('e_modified_amount', tbl[i].name, 'earning_details');
+		//}
 		total_earn += flt(tbl[i].e_modified_amount);
 	}
 	doc.gross_pay = total_earn + flt(doc.arrear_amount) + flt(doc.leave_encashment_amount);
@@ -181,10 +181,10 @@ var calculate_ded_total = function(doc, dt, dn) {
 
 	var total_ded = 0;
 	for(var i = 0; i < tbl.length; i++){
-		if(cint(tbl[i].d_depends_on_lwp) == 1) {
-			tbl[i].d_modified_amount = Math.round(tbl[i].d_amount)*(flt(doc.payment_days)/cint(doc.total_days_in_month)*100)/100;
-			refresh_field('d_modified_amount', tbl[i].name, 'deduction_details');
-		}
+		//if(cint(tbl[i].d_depends_on_lwp) == 1) {
+		tbl[i].d_modified_amount = Math.round(tbl[i].d_amount)*(flt(doc.payment_days)/cint(doc.total_days_in_month)*100)/100;
+		refresh_field('d_modified_amount', tbl[i].name, 'deduction_details');
+		//}
 		total_ded += flt(tbl[i].d_modified_amount);
 	}
 	doc.total_deduction = total_ded;

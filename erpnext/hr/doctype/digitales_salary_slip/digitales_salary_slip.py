@@ -229,6 +229,7 @@ class DigitalesSalarySlip(Document):
 				e = self.append('earning_details', {})
 				e.e_modified_amount=i['modified_value']
 				e.e_amount=i['modified_value']
+				e.e_depends_on_lwp=1
 				e.e_type=i['e_type']
 			
 		deduction=frappe.db.sql(""" select  d_type,d_modified_amt from `tabSalary Structure Deduction` where 
@@ -240,6 +241,7 @@ class DigitalesSalarySlip(Document):
 				d = self.append('deduction_details', {})
 				d.d_modified_amount=j['d_modified_amt']
 				d.d_amount=j['d_modified_amt']
+				d.d_depends_on_lwp=1
 				d.d_type=j['d_type']
 
 	def create_sal_stucture(self,rate,hour):

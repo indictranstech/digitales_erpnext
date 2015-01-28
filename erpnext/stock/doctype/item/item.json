@@ -185,7 +185,7 @@
    "oldfieldtype": "Link", 
    "options": "Warehouse", 
    "permlevel": 0, 
-   "read_only": 0
+   "read_only": 1
   }, 
   {
    "depends_on": "eval:doc.is_stock_item==\"Yes\"", 
@@ -825,7 +825,7 @@
  "icon": "icon-tag", 
  "idx": 1, 
  "max_attachments": 1, 
- "modified": "2015-01-21 21:51:26.804671", 
+ "modified": "2015-01-24 16:24:02.773822", 
  "modified_by": "Administrator", 
  "module": "Stock", 
  "name": "Item", 

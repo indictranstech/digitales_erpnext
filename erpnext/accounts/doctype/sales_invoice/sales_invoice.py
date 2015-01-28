@@ -101,8 +101,23 @@ class SalesInvoice(SellingController):
 
 		self.update_time_log_batch(self.name)
 
+		self.update_process_status()
+
 	def before_cancel(self):
 		self.update_time_log_batch(None)
+
+	#Tejal-------------------------------------------------------------------------
+	def update_process_status(self):
+		for d in self.get('entries'):
+			#frappe.errprint(d)
+			if d.process_id:
+				#frappe.errprint(d.process_id)
+				frappe.db.sql("""update `tabProcess` set sales_invoice_status='Done' where
+								name='%s'"""%d.process_id)
+				frappe.db.commit()
+			else:
+				pass
+
 
 	def on_cancel(self):
 		if cint(self.update_stock) == 1:
@@ -429,6 +444,9 @@ class SalesInvoice(SellingController):
 					frappe.msgprint(_("Note: Payment Entry will not be created since 'Cash or Bank Account' was not specified"))
 		else:
 			frappe.db.set(self,'paid_amount',0)
+
+
+		#self.update_process_status()
 
 	def check_prev_docstatus(self):
 		for d in self.get('entries'):
