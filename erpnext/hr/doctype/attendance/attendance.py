@@ -63,7 +63,7 @@ class Attendance(Document):
 		# while uploading employee attendance
 		employee_name = frappe.db.get_value("Employee", self.employee, "employee_name")
 		frappe.db.set(self, 'employee_name', employee_name)
-		self.validate_total_break_hours()
+		#self.validate_total_break_hours()
 
 	def validate_total_break_hours(self):
 		import datetime as dt
@@ -74,18 +74,18 @@ class Attendance(Document):
 		for i in range(0,len(time)):
 			if i+1 < len(time):
 				start_dt = dt.datetime.strptime(time[i].out_time, '%H:%M:%S')
-				frappe.errprint(start_dt)
+				#frappe.errprint(start_dt)
 				end_dt = dt.datetime.strptime(time[i+1].in_time, '%H:%M:%S')
-				frappe.errprint(end_dt)
+				#frappe.errprint(end_dt)
 				diff = (end_dt - start_dt)
-				frappe.errprint(diff)
+				#frappe.errprint(diff)
 				break_time=diff.seconds/60 
-				frappe.errprint(break_time)
+				#frappe.errprint(break_time)
 				#break_time=break_time/60
 				break_time1=break_time1+break_time
 				#frappe.errprint(break_time1/60)
 		#doc1.total_break_hours=break_time1
-		frappe.errprint(break_time1)
+		#frappe.errprint(break_time1)
 		frappe.db.set_value("Attendance", self.name, "total_break_hours", break_time1/60)
 
 		#doc1.save(ignore_permissions=True)

@@ -14,7 +14,7 @@ cur_frm.add_fetch('employee', 'designation', 'designation');
 
 cur_frm.add_fetch('employee', 'bank_name', 'bank_name');
 
-cur_frm.add_fetch('employee', 'bank_ac_no', 'bank_ac_no');
+cur_frm.add_fetch('employee', 'bank_ac_no', 'bank_account_no');
 
 
 
@@ -28,14 +28,14 @@ cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 		var date2 = new Date(doc.to_date);
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		console.log(diffDays)
+		//console.log(diffDays)
 		if(date1>date2){
 			msgprint("From Date must be less than To Date")
 		}
 		if(doc.employee){
 			if(diffDays == 14){
-				console.log("in from date date diff")
-				console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
+				//console.log("in from date date diff")
+				//console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
 				var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee}
 				get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
 				refresh_field('total_days_in_month')	
@@ -51,14 +51,14 @@ cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 
 
 cur_frm.cscript.to_date= function(doc, cdt, cdn) {
-	console.log("in the to date");
+	//console.log("in the to date");
 	if (doc.from_date && doc.to_date)
 	{	
 		var date1 = new Date(doc.from_date);
 		var date2 = new Date(doc.to_date);
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		console.log(diffDays)
+		//console.log(diffDays)
 		if(date2<date1){
 			msgprint("To Date must be greater than From Date")
 		}

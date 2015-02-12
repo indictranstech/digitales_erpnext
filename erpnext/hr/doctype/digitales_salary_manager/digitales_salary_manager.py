@@ -12,7 +12,7 @@ class DigitalesSalaryManager(Document):
 	
 
 	def get_emp_list(self):
-		frappe.errprint("1. in get employee list")
+		#frappe.errprint("1. in get employee list")
 		"""
 			Returns list of active employees based on selected criteria
 			and for which salary structure exists
@@ -35,7 +35,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def get_filter_condition(self):
-		frappe.errprint("2. in get get_filter_condition")
+		#frappe.errprint("2. in get get_filter_condition")
 		self.check_mandatory()
 
 		cond = ''
@@ -49,19 +49,19 @@ class DigitalesSalaryManager(Document):
 
 
 	def get_joining_releiving_condition(self):
-		frappe.errprint("4. in get get_joining_releiving_condition")
+		#frappe.errprint("4. in get get_joining_releiving_condition")
 		#m = self.get_month_details(self.fiscal_year, self.from_date,self.to_date)
 		#frappe.errprint(["joining",m])
 		cond = """
 			and ifnull(t1.date_of_joining, '0000-00-00') <= '%s'
 			and ifnull(t1.relieving_date, '2199-12-31') >= '%s'
 		""" %(self.to_date,self.from_date)
-		frappe.errprint(cond)
+		#frappe.errprint(cond)
 		return cond
 
 
 	def check_mandatory(self):
-		frappe.errprint("3. in check_mandatory")
+		#frappe.errprint("3. in check_mandatory")
 		for f in ['company', 'fiscal_year']:
 			if not self.get(f):
 				frappe.throw(_("Please set {0}").format(f))
@@ -88,7 +88,7 @@ class DigitalesSalaryManager(Document):
 
 	def create_sal_slip(self):
 
-		frappe.errprint("0. create_sal_slip")
+		#frappe.errprint("0. create_sal_slip")
 		"""
 			Creates salary slip for selected employees if already not created
 
@@ -128,7 +128,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def get_sal_slip_list(self):
-		frappe.errprint("2. get salary slip list")
+		#frappe.errprint("2. get salary slip list")
 		"""
 			Returns list of salary slips based on selected criteria
 			which are not submitted
@@ -143,7 +143,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def submit_salary_slip(self):
-		frappe.errprint("1. submit salary slip")
+		#frappe.errprint("1. submit salary slip")
 		"""
 			Submit all salary slips based on selected criteria
 		"""
@@ -164,7 +164,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def create_submit_log(self, all_ss, not_submitted_ss):
-		frappe.errprint("3.create submit log")
+		#frappe.errprint("3.create submit log")
 
 		log = ''
 		if not all_ss:
@@ -194,7 +194,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def get_total_salary(self):
-		frappe.errprint("2. get_total_salary")
+		#frappe.errprint("2. get_total_salary")
 		"""
 			Get total salary amount from submitted salary slip based on selected criteria
 		"""
@@ -208,7 +208,7 @@ class DigitalesSalaryManager(Document):
 
 
 	def get_acc_details(self):
-		frappe.errprint("1.get_acc_details")
+		#frappe.errprint("1.get_acc_details")
 		"""
 			get default bank account,default salary acount from company
 		"""

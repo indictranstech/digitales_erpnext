@@ -20,7 +20,7 @@ class DigitalesSalarySlip(Document):
 
 
 	def get_weeklyofday_details(self,args):
-		frappe.errprint("in the py")
+		#frappe.errprint("in the py")
 		# frappe.errprint(args['from_date'])
 		# frappe.errprint(args['to_date'])
 		#salary_slip=self.get_salary_slip(self.from_date)
@@ -29,7 +29,7 @@ class DigitalesSalarySlip(Document):
 		# self.total_days_in_month=14
 
 	def get_salary_slip(self,from_date):
-		frappe.errprint("in get salary slip")
+		#frappe.errprint("in get salary slip")
 		salary_slip=frappe.db.sql("""select name from `tabDigitales Salary Slip` where employee='%s'
 				and to_date>'%s' and docstatus=0 or docstatus=1"""%(self.employee,from_date))
 		#frappe.errprint(salary_slip)
@@ -41,7 +41,7 @@ class DigitalesSalarySlip(Document):
 			frappe.msgprint("Salary Slip is already generated for the employee='"+self.employee+"' for dates from date='%s' and to date='%s'"%(dates[0][0],dates[0][1]))
 
 	def get_holidays_for_employee(self,m):
-		frappe.errprint("get_holidays_for_employee")
+		#frappe.errprint("get_holidays_for_employee")
 
 		holidays = frappe.db.sql("""select t1.holiday_date
 			from `tabHoliday` t1, tabEmployee t2
@@ -61,7 +61,7 @@ class DigitalesSalarySlip(Document):
 
 
 	def get_emp_and_leave_details(self):
-		frappe.errprint("in the")
+		#frappe.errprint("in the")
 		if self.employee:
 			#salary_slip=self.get_salary_slip(self.from_date)
 			self.get_leave_details()
@@ -75,9 +75,9 @@ class DigitalesSalarySlip(Document):
 
 			elif salary_structure[0][0]=='No':
 				rate=frappe.db.get_value("Employee",self.employee ,"hour_rate")
-				frappe.errprint(rate)
+				#frappe.errprint(rate)
 				frappe.db.set(self, 'hour_rate', rate)
-				frappe.errprint(self.attendance_hours)
+				#frappe.errprint(self.attendance_hours)
 				if rate:
 					self.create_sal_stucture(rate,self.attendance_hours)	
 				else:
@@ -88,7 +88,7 @@ class DigitalesSalarySlip(Document):
 
 
 	def get_leave_details(self, lwp=None):
-		frappe.errprint("in get leave details")
+		#frappe.errprint("in get leave details")
 		if not self.fiscal_year:
 			self.fiscal_year = frappe.get_default("fiscal_year")
 		if not self.month:
@@ -97,14 +97,14 @@ class DigitalesSalarySlip(Document):
 		"""code for holidays"""
 
 		m={'employee':self.employee,'month_start_date': self.from_date,'month_end_date':self.to_date}
-		frappe.errprint(m)
+		#frappe.errprint(m)
 		holidays = self.get_holidays_for_employee(m)
 		m["month_days"]=14
 
 
 		if not cint(frappe.db.get_value("HR Settings", "HR Settings",
 			"include_holidays_in_total_working_days")):
-				frappe.errprint(["length",len(holidays)])
+				#frappe.errprint(["length",len(holidays)])
 				m["month_days"] -= len(holidays)
 				# week_days -= len(holidays)
 				if m["month_days"] < 0:
@@ -112,8 +112,8 @@ class DigitalesSalarySlip(Document):
 
 		if not lwp:
 			lwp = self.calculate_lwp(holidays, m)
-			frappe.errprint(["lwp",lwp])
-			frappe.errprint(["month_days",m['month_days']])
+			#frappe.errprint(["lwp",lwp])
+			#frappe.errprint(["month_days",m['month_days']])
 		self.total_days_in_month = m['month_days']
 		#frappe.errprint(["total_days_in_month",total_days_in_month])
 		self.leave_without_pay = lwp
@@ -123,7 +123,7 @@ class DigitalesSalarySlip(Document):
 		attendance_days,attendance_hours= self.get_attendance_days()
 		self.attendance_days = attendance_days 
 		self.attendance_hours = attendance_hours
-		frappe.errprint(["payment_days",payment_days])
+		#frappe.errprint(["payment_days",payment_days])
 		self.payment_days = payment_days > 0 and payment_days or 0
 
 
@@ -147,13 +147,13 @@ class DigitalesSalarySlip(Document):
 
 
 	def get_payment_days(self, m):
-		frappe.errprint("get_payment_days")
+		#frappe.errprint("get_payment_days")
 		# frappe.errprint([getdate(emp['date_of_joining']).day + 1])
 		payment_days = m['month_days']
 		emp = frappe.db.sql("select date_of_joining, relieving_date from `tabEmployee` \
 			where name = %s", self.employee, as_dict=1)[0]
-		frappe.errprint(emp)
-		frappe.errprint([getdate(emp['date_of_joining']).day + 1])
+		#frappe.errprint(emp)
+		#frappe.errprint([getdate(emp['date_of_joining']).day + 1])
 		# frappe.errprint([getdate(emp['relieving_date']).day])
 		if emp['relieving_date']:
 			if getdate(emp['relieving_date']) > getdate(m['month_start_date']) and \
@@ -175,12 +175,12 @@ class DigitalesSalarySlip(Document):
 
 
 	def get_attendance_days(self):
-		frappe.errprint("in attendance days")
+		#frappe.errprint("in attendance days")
 		#d = getdate(self.to_date)- timedelta(days=1)
 		# frappe.errprint(d)
 		att_dates=frappe.db.sql("""select count(att_date),ifnull(sum(total_hours),0)from `tabAttendance` where docstatus=1 and status='Present'
 						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
-		frappe.errprint(att_dates)
+		#frappe.errprint(att_dates)
 		if att_dates:
 
 			attendance_days=att_dates[0][0]
@@ -188,7 +188,7 @@ class DigitalesSalarySlip(Document):
 
 		att_dates1=frappe.db.sql("""select count(att_date) ,ifnull(sum(total_hours),0) from `tabAttendance` where docstatus=1 and status='Half Day' 
 						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
-		frappe.errprint(att_dates1)
+		#frappe.errprint(att_dates1)
 		if att_dates1:
 			attendance_days=att_dates[0][0] + (att_dates1[0][0]*0.5)
 			attendance_hours=attendance_hours + att_dates1[0][1]
@@ -218,11 +218,11 @@ class DigitalesSalarySlip(Document):
 
 
 	def pull_sal_struct(self, struct):
-		frappe.errprint("in the pull_sal_struct")
+		#frappe.errprint("in the pull_sal_struct")
 		from erpnext.hr.doctype.salary_structure.salary_structure import make_salary_slip
 		earning= frappe.db.sql(""" select  e_type,modified_value from `tabSalary Structure Earning` where 
 					parent='%s'"""%struct,as_dict=1)
-		frappe.errprint(earning)
+		#frappe.errprint(earning)
 		if earning:
 			self.set('earning_details', [])
 			for i in earning:
@@ -234,7 +234,7 @@ class DigitalesSalarySlip(Document):
 			
 		deduction=frappe.db.sql(""" select  d_type,d_modified_amt from `tabSalary Structure Deduction` where 
 					parent='%s'"""%struct,as_dict=1)
-		frappe.errprint(deduction)
+		#frappe.errprint(deduction)
 		if deduction:
 			self.set('deduction_details', [])
 			for j in deduction:
@@ -245,7 +245,7 @@ class DigitalesSalarySlip(Document):
 				d.d_type=j['d_type']
 
 	def create_sal_stucture(self,rate,hour):
-		frappe.errprint("in create_sal_stucture")
+		#frappe.errprint("in create_sal_stucture")
 		self.set('earning_details', [])
 		e = self.append('earning_details', {})
 		e.e_modified_amount=rate*hour
@@ -284,12 +284,12 @@ class DigitalesSalarySlip(Document):
 
 
 	def check_existing(self):
-		frappe.errprint("check_existing")
+		#frappe.errprint("check_existing")
 		ret_exist = frappe.db.sql("""select name from `tabDigitales Salary Slip`
 			where (from_date between %s and %s or to_date between %s and %s) and fiscal_year = %s and docstatus != 2
 			and employee = %s and name != %s""",
 			(self.from_date, self.to_date,self.from_date,self.to_date,self.fiscal_year, self.employee, self.name),debug=1)
-		frappe.errprint(ret_exist)
+		#frappe.errprint(ret_exist)
 		if ret_exist:
 			dates=frappe.db.sql("""select from_date,to_date from `tabDigitales Salary Slip`
 			  where name='%s'"""%ret_exist[0][0])
@@ -347,7 +347,7 @@ class DigitalesSalarySlip(Document):
 		from frappe.utils.email_lib import sendmail
 
 		receiver = frappe.db.get_value("Employee", self.employee, "company_email")
-		frappe.errprint(receiver)
+		#frappe.errprint(receiver)
 		if receiver:
 			subj = 'Salary Slip - ' + cstr(self.from_date) +'/'+cstr(self.to_date) 
 			sendmail([receiver], subject=subj, msg = _("Please see attachment"),

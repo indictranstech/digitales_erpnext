@@ -34,7 +34,7 @@ def get_data():
 				{
 					"type": "doctype",
 					"name": "Digitales Salary Slip",
-					"description": _("Twoweekly salary statement."),
+					"description": _("Fortnightly salary statement."),
 				},
 				{
 					"type": "doctype",
