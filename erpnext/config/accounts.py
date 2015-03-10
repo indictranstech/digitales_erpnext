@@ -224,6 +224,12 @@ def get_data():
 					"doctype": "Sales Invoice",
 					"is_query_report": True
 				},
+				{
+					"type": "report",
+					"name": "Spend By Item By Customer",
+					"doctype": "Sales Invoice",
+					"is_query_report": True
+				},
 			]
 		},
 		{

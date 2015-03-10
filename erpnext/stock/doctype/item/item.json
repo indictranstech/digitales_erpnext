@@ -825,7 +825,7 @@
  "icon": "icon-tag", 
  "idx": 1, 
  "max_attachments": 1, 
- "modified": "2015-01-24 16:24:02.773822", 
+ "modified": "2015-03-03 18:26:33.332282", 
  "modified_by": "Administrator", 
  "module": "Stock", 
  "name": "Item", 
@@ -902,5 +902,6 @@
    "role": "Manufacturing User"
   }
  ], 
- "search_fields": "item_name,description,item_group,customer_code"
+ "search_fields": "item_name,description,item_group,customer_code", 
+ "title_field": "item_name"
 }

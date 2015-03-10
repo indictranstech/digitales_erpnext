@@ -9,6 +9,7 @@ from frappe.website.website_generator import WebsiteGenerator
 from erpnext.setup.doctype.item_group.item_group import invalidate_cache_for, get_parent_item_groups
 from frappe.website.render import clear_cache
 from frappe.website.doctype.website_slideshow.website_slideshow import get_slideshow
+from digitales.digitales.custom_methods import check_uom_conversion
 
 class WarehouseNotSet(frappe.ValidationError): pass
 
@@ -41,7 +42,13 @@ class Item(WebsiteGenerator):
 
 		self.check_warehouse_is_set_for_stock_item()
 		self.check_stock_uom_with_bin()
-		self.add_default_uom_in_conversion_factor_table()
+		status=check_uom_conversion(self.name)
+		frappe.errprint(status)
+		if status==False:
+			self.add_default_uom_in_conversion_factor_table()
+		elif status==True:
+			pass
+
 		self.validate_conversion_factor()
 		self.validate_item_type()
 		self.check_for_active_boms()
@@ -76,6 +83,7 @@ class Item(WebsiteGenerator):
 				raise_exception=WarehouseNotSet)
 
 	def add_default_uom_in_conversion_factor_table(self):
+		frappe.errprint("add_default_uom_in_conversion_factor_table")
 		uom_conv_list = [d.uom for d in self.get("uom_conversion_details")]
 		if self.stock_uom not in uom_conv_list:
 			ch = self.append('uom_conversion_details', {})

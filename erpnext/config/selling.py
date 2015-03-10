@@ -196,6 +196,13 @@ def get_data():
 					"doctype": "Customer",
 					"icon": "icon-bar-chart",
 				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Unreceived Purchase Orders",
+					"doctype": "Sales Order",
+					"icon": "icon-bar-chart",
+				},
 			]
 		},
 		{

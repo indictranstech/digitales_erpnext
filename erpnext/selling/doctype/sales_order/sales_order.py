@@ -95,7 +95,7 @@ class SalesOrder(SellingController):
 		super(SalesOrder, self).validate()
 
 		self.validate_order_type()
-		self.validate_delivery_date()
+		#self.validate_delivery_date()
 		self.validate_mandatory()
 		self.validate_proj_cust()
 		self.validate_po()
@@ -159,7 +159,7 @@ class SalesOrder(SellingController):
 
 		frappe.get_doc('Authorization Control').validate_approving_authority(self.doctype, self.grand_total, self)
 
-		self.validate_contract(self.customer)
+		#self.validate_contract(self.customer)
 
 		self.update_prevdoc_status('submit')
 		frappe.db.set(self, 'status', 'Submitted')
