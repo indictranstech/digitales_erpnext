@@ -8,6 +8,11 @@ cur_frm.cscript.fname = "sales_order_details";
 cur_frm.cscript.other_fname = "other_charges";
 cur_frm.cscript.sales_team_fname = "sales_team";
 
+cur_frm.add_fetch('item_code','product_release_date','release_date_of_item');
+cur_frm.add_fetch('customer','customer_group','customer_group');
+cur_frm.add_fetch('customer','territory','territory');
+cur_frm.add_fetch('customer','tender_group','tender_group');
+
 {% include 'selling/sales_common.js' %}
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}
@@ -219,8 +224,27 @@ cur_frm.cscript.customer = function(doc, cdt, cdn){
 	refresh_field('amount');
 }
 
+// cur_frm.cscript.budget = function(doc,cdt,cdn){
+// 	console.log("in budget")
+// 	console.log(doc.customer)
+// 	if(doc.customer){
+// 		console.log(doc.customer)
+// 		cust_name=doc.customer
+// 		get_server_fields('get_budget_details', '' , doc.customer, doc, cdt, cdn, 1);
 
+// 	}
+// }
 
+cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
+	if (doc.customer){
+ 		{
+    		return "select budget from `tabBudget Details` where parent='"+doc.customer+"'"
+
+ 		}
+ 	}
+ 	else
+ 		msgprint("First select the customer")
+}
 cur_frm.cscript.priority = function(doc, cdt, cdn){
 	//var d = locals[cdt][cdn];
 	if (doc.priority){

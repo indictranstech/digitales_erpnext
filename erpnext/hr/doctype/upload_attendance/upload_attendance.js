@@ -36,7 +36,8 @@ erpnext.hr.AttendanceControlPanel = frappe.ui.form.Controller.extend({
 		frappe.upload.make({
 			parent: $wrapper,
 			args: {
-				method: 'erpnext.hr.doctype.upload_attendance.upload_attendance.upload'
+				// method: 'erpnext.hr.doctype.upload_attendance.upload_attendance.upload'
+				method: 'digitales.digitales.custom_methods.upload'
 			},
 			sample_url: "e.g. http://example.com/somefile.csv",
 			callback: function(attachment, r) {

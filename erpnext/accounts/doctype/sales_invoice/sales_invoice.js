@@ -13,6 +13,10 @@ cur_frm.pformat.print_heading = 'Invoice';
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}
 
+
+cur_frm.add_fetch('customer','tender_group','tender_group');
+
+
 frappe.provide("erpnext.accounts");
 erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.extend({
 	onload: function() {
@@ -406,3 +410,13 @@ cur_frm.cscript.send_sms = function() {
 	var sms_man = new SMSManager(cur_frm.doc);
 }
 
+cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
+	if (doc.customer){
+ 		{
+    		return "select budget from `tabBudget Details` where parent='"+doc.customer+"'"
+
+ 		}
+ 	}
+ 	else
+ 		msgprint("First select the customer")
+}

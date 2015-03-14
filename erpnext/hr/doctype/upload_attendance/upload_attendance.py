@@ -37,7 +37,7 @@ def add_header(w):
 	w.writerow(["Status should be one of these values: " + status])
 	w.writerow(["If you are overwriting existing attendance records, 'ID' column mandatory"])
 	w.writerow(["ID", "Employee", "Employee Name", "Date", "Status",
-		"Fiscal Year", "Company", "Naming Series"])
+		"Fiscal Year", "Company", "Naming Series", "In Time", "Out Time"])
 	return w
 
 def add_data(w, args):
@@ -60,6 +60,7 @@ def add_data(w, args):
 				existing_attendance and existing_attendance.naming_series or get_naming_series(),
 			]
 			w.writerow(row)
+			w.writerow([])
 	return w
 
 def get_dates(args):

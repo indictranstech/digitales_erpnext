@@ -230,6 +230,12 @@ def get_data():
 					"doctype": "Sales Invoice",
 					"is_query_report": True
 				},
+				{
+					"type": "report",
+					"name": "Spend By Customer By Tender Groups",
+					"doctype": "Sales Invoice",
+					"is_query_report": True
+				},
 			]
 		},
 		{

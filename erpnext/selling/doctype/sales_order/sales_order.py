@@ -95,7 +95,7 @@ class SalesOrder(SellingController):
 		super(SalesOrder, self).validate()
 
 		self.validate_order_type()
-		#self.validate_delivery_date()
+		self.validate_delivery_date()
 		self.validate_mandatory()
 		self.validate_proj_cust()
 		self.validate_po()
@@ -261,6 +261,7 @@ class SalesOrder(SellingController):
 
 	def get_portal_page(self):
 		return "order" if self.docstatus==1 else None
+
 
 @frappe.whitelist()
 def make_material_request(source_name, target_doc=None):
