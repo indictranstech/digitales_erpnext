@@ -10,12 +10,12 @@ cur_frm.cscript.onload = function(doc, dt, dn){
 		return $c_obj(doc,'make_earn_ded_table','', function(r, rt) { refresh_many(['earning_details', 'deduction_details']);});
 }
 
-cur_frm.cscript.refresh = function(doc, dt, dn){
-	if((!doc.__islocal) && (doc.is_active == 'Yes')){
-		cur_frm.add_custom_button(__('Make Salary Slip'),
-			cur_frm.cscript['Make Salary Slip'], frappe.boot.doctype_icons["Salary Slip"]);
-	}
-}
+// cur_frm.cscript.refresh = function(doc, dt, dn){
+// 	if((!doc.__islocal) && (doc.is_active == 'Yes')){
+// 		cur_frm.add_custom_button(__('Make Salary Slip'),
+// 			cur_frm.cscript['Make Salary Slip'], frappe.boot.doctype_icons["Salary Slip"]);
+// 	}
+// }
 
 cur_frm.cscript['Make Salary Slip'] = function() {
 	frappe.model.open_mapped_doc({

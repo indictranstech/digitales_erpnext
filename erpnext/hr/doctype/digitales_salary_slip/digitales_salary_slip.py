@@ -47,15 +47,16 @@ class DigitalesSalarySlip(Document):
 			from `tabHoliday` t1, tabEmployee t2
 			where t1.parent = t2.holiday_list and t2.name = %s
 			and t1.holiday_date between %s and %s""",
-			(m['employee'], m['month_start_date'], m['month_end_date']))
+			(m['employee'], m['month_start_date'], m['month_end_date']),debug=1)
 		if not holidays:
 			holidays = frappe.db.sql("""select t1.holiday_date
 				from `tabHoliday` t1, `tabHoliday List` t2
 				where t1.parent = t2.name and ifnull(t2.is_default, 0) = 1
 				and t2.fiscal_year = %s
 				and t1.holiday_date between %s and %s""", (self.fiscal_year,
-					m['month_start_date'], m['month_end_date']))
+					m['month_start_date'], m['month_end_date']),debug=1)
 		holidays = [cstr(i[0]) for i in holidays]
+		frappe.errprint(holidays)
 		return holidays
 
 
