@@ -16,16 +16,14 @@ from datetime import date, timedelta
 from erpnext.utilities.transaction_base import TransactionBase
 
 class DigitalesSalarySlip(Document):
-	pass
-
-
+	
 	def get_weeklyofday_details(self,args):
 		#frappe.errprint("in the py")
-		# frappe.errprint(args['from_date'])
+		#frappe.errprint(args['date_diff'])
 		# frappe.errprint(args['to_date'])
 		#salary_slip=self.get_salary_slip(self.from_date)
 		holidays = self.get_holidays_for_employee(args)
-		self.total_days_in_month=14-len(holidays)
+		self.total_days_in_month=args['date_diff']-len(holidays)
 		# self.total_days_in_month=14
 
 	def get_salary_slip(self,from_date):
@@ -47,25 +45,25 @@ class DigitalesSalarySlip(Document):
 			from `tabHoliday` t1, tabEmployee t2
 			where t1.parent = t2.holiday_list and t2.name = %s
 			and t1.holiday_date between %s and %s""",
-			(m['employee'], m['month_start_date'], m['month_end_date']),debug=1)
+			(m['employee'], m['month_start_date'], m['month_end_date']))
 		if not holidays:
 			holidays = frappe.db.sql("""select t1.holiday_date
 				from `tabHoliday` t1, `tabHoliday List` t2
 				where t1.parent = t2.name and ifnull(t2.is_default, 0) = 1
 				and t2.fiscal_year = %s
 				and t1.holiday_date between %s and %s""", (self.fiscal_year,
-					m['month_start_date'], m['month_end_date']),debug=1)
+					m['month_start_date'], m['month_end_date']))
 		holidays = [cstr(i[0]) for i in holidays]
-		frappe.errprint(holidays)
+		#frappe.errprint(holidays)
 		return holidays
 
 
 
-	def get_emp_and_leave_details(self):
-		#frappe.errprint("in the")
+	def get_emp_and_leave_details(self,diff):
+		#frappe.errprint(["in get_emp_and_leave_details",diff])
 		if self.employee:
 			#salary_slip=self.get_salary_slip(self.from_date)
-			self.get_leave_details()
+			self.get_leave_details(diff)
 			salary_structure=frappe.db.sql("""select digitales_salary_structure from `tabEmployee`
 						where name='%s'"""%self.employee)
 			if salary_structure[0][0]=='Yes':
@@ -88,7 +86,7 @@ class DigitalesSalarySlip(Document):
 				frappe.throw("Digitales Salary Structure {Yes,No} is not specified in Employee master")
 
 
-	def get_leave_details(self, lwp=None):
+	def get_leave_details(self,diff,lwp=None):
 		#frappe.errprint("in get leave details")
 		if not self.fiscal_year:
 			self.fiscal_year = frappe.get_default("fiscal_year")
@@ -100,23 +98,28 @@ class DigitalesSalarySlip(Document):
 		m={'employee':self.employee,'month_start_date': self.from_date,'month_end_date':self.to_date}
 		#frappe.errprint(m)
 		holidays = self.get_holidays_for_employee(m)
-		m["month_days"]=14
-
+		#frappe.errprint(holidays)
+		m["month_days"]=diff
+		#frappe.errprint(m["month_days"])
 
 		if not cint(frappe.db.get_value("HR Settings", "HR Settings",
 			"include_holidays_in_total_working_days")):
 				#frappe.errprint(["length",len(holidays)])
 				m["month_days"] -= len(holidays)
+				#frappe.errprint(m["month_days"])
 				# week_days -= len(holidays)
 				if m["month_days"] < 0:
-					frappe.throw(_("There are more holidays than working days this month."))
+					#frappe.errprint("in if")
+					frappe.throw(_("There are more holidays than working days in between the specified from_date and to_date."))
+				else:
+					pass
 
 		if not lwp:
 			lwp = self.calculate_lwp(holidays, m)
 			#frappe.errprint(["lwp",lwp])
 			#frappe.errprint(["month_days",m['month_days']])
 		self.total_days_in_month = m['month_days']
-		#frappe.errprint(["total_days_in_month",total_days_in_month])
+		#frappe.errprint(["total_days_in_month",self.total_days_in_month])
 		self.leave_without_pay = lwp
 		#frappe.errprint(["leave_without_pay",leave_without_pay])
 		payment_days = flt(self.get_payment_days(m)) - flt(lwp)
@@ -263,15 +266,20 @@ class DigitalesSalarySlip(Document):
 	
 
 	def validate(self):
-		# frappe.errprint("in the validate")
+		#frappe.errprint("in validate")
+		from datetime import datetime
 		from frappe.utils import money_in_words
+		d1 = datetime.strptime(self.from_date, "%Y-%m-%d")
+		d2 = datetime.strptime(self.to_date, "%Y-%m-%d")
+		diff=abs((d2 - d1).days)
+		#frappe.errprint(diff)
 		self.check_existing()
-		#self.validate_attendance()
+		self.validate_attendance()
 		if not (len(self.get("earning_details")) or
 			len(self.get("deduction_details"))):
-				self.get_emp_and_leave_details()
+				self.get_emp_and_leave_details(diff)
 		else:
-			self.get_leave_details(self.leave_without_pay)
+			self.get_leave_details(diff,self.leave_without_pay)
 
 		if not self.net_pay:
 			self.calculate_net_pay()
@@ -336,6 +344,8 @@ class DigitalesSalarySlip(Document):
 						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
 		# frappe.errprint(att_dates)
 		if att_dates:
+			pass
+		else:
 			frappe.throw("Total payment days for employee='%s' is '%s' and total attendance for the specified dates is '%s'"%(self.employee,self.payment_days,att_dates[0][0]))
 
 

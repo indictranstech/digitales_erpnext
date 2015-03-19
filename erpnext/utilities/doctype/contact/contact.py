@@ -12,7 +12,7 @@ class Contact(StatusUpdater):
 	def autoname(self):
 		# concat first and last name
 		self.name = " ".join(filter(None, 
-			[cstr(self.get(f)).strip() for f in ["first_name", "last_name"]]))
+			[cstr(self.get(f)).strip() for f in ["first_name", "last_name","entity_id"]]))
 		
 		# concat party name if reqd
 		for fieldname in ("customer", "supplier", "sales_partner"):

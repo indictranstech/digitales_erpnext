@@ -70,13 +70,13 @@ cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 		var date2 = new Date(doc.to_date);
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		console.log(diffDays)
+		//console.log(diffDays)
 		if(date1>date2){
 			msgprint("From Date must be less than To Date")
 		}
-		if(diffDays != 14){
-			msgprint("Dates diffrence is not equal to the two weeks")
-		}
+		// if(diffDays != 14){
+		// 	msgprint("Dates diffrence is not equal to the two weeks")
+		// }
      
 	}
 };
@@ -89,12 +89,12 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		var date2 = new Date(doc.to_date);
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		console.log(diffDays)
+		//console.log(diffDays)
 		if(date2<date1){
 			msgprint("To Date must be greater than From Date")
 		}
-		if(diffDays != 14){
-			msgprint("Dates diffrence is not equal to the two weeks")
-		}
+		// if(diffDays != 14){
+		// 	msgprint("Dates diffrence is not equal to the two weeks")
+		// }
 	}
 };

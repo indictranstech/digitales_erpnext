@@ -23,7 +23,7 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 0, 
+   "reqd": 1, 
    "search_index": 0, 
    "set_only_once": 0
   }, 
@@ -42,7 +42,7 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 0, 
+   "reqd": 1, 
    "search_index": 0, 
    "set_only_once": 0
   }, 
@@ -73,7 +73,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2015-01-27 16:36:23.014792", 
+ "modified": "2015-03-16 17:10:43.150362", 
  "modified_by": "Administrator", 
  "module": "HR", 
  "name": "Attendance Time Sheets", 
