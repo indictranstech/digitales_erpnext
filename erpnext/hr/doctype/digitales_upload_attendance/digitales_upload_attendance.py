@@ -1,17 +1,15 @@
-# Copyright (c) 2013, Web Notes Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
-
+# Copyright (c) 2013, Web Notes Technologies Pvt. Ltd. and Contributors and contributors
 # For license information, please see license.txt
-
 from __future__ import unicode_literals
 import frappe
-from frappe.utils import cstr, add_days, date_diff
+from frappe.utils import cstr,cint, add_days, date_diff
 from frappe import _
 from frappe.utils.csvutils import UnicodeWriter
 from frappe.model.document import Document
 
-class UploadAttendance(Document):
+class DigitalesUploadAttendance(Document):
 	pass
+
 
 @frappe.whitelist()
 def get_template():
@@ -36,9 +34,10 @@ def add_header(w):
 	w.writerow(["Please do not change the template headings"])
 	w.writerow(["Status should be one of these values: " + status])
 	w.writerow(["If you are overwriting existing attendance records, 'ID' column mandatory"])
+	w.writerow(["DocType:", "Attendance", "", "", "",
+	 	"", "", "","~","Attendance Time Sheets","attendance_time_sheet"])
 	w.writerow(["ID", "Employee", "Employee Name", "Date", "Status",
-		"Fiscal Year", "Company", "Naming Series"])
-	return w
+		"Fiscal Year", "Company", "Naming Series","~","ID","In Time","Out Time"])
 	return w
 
 def add_data(w, args):
@@ -48,6 +47,7 @@ def add_data(w, args):
 	employees = get_active_employees()
 	existing_attendance_records = get_existing_attendance_records(args)
 	for date in dates:
+		frappe.errprint(date)
 		for employee in employees:
 			existing_attendance = {}
 			if existing_attendance_records \
@@ -61,6 +61,7 @@ def add_data(w, args):
 				existing_attendance and existing_attendance.naming_series or get_naming_series(),
 			]
 			w.writerow(row)
+			w.writerow("\n")
 	return w
 
 def get_dates(args):
@@ -102,28 +103,52 @@ def upload():
 
 	rows = read_csv_content_from_uploaded_file()
 	rows = filter(lambda x: x and any(x), rows)
+	#frappe.errprint(rows)
 	if not rows:
 		msg = [_("Please select a csv file")]
 		return {"messages": msg, "error": msg}
-	columns = [scrub(f) for f in rows[4]]
+	columns = [scrub(f) for f in rows[5]]
+	#frappe.errprint(columns)
 	columns[0] = "name"
 	columns[3] = "att_date"
+	#frappe.errprint(columns)
 	ret = []
 	error = False
 
-	from frappe.utils.csvutils import check_record, import_doc
+	from frappe.utils.csvutils import check_record
+	dict1={}
+	att_id=''
+	worked_hours=''
+	for i, row in enumerate(rows[6:]):
+		#frappe.errprint(i)
+		#frappe.errprint(row)
+		
+		if row[1] and row[3]:
+			dict1={'employee':row[1],'att_date':row[3],'status':row[4],'fiscal_year':row[5],'company':row[6],'naming_series':row[7],'employee_name':row[2]}
+			
+		dict1['in_time'] = row[10]
+		dict1['out_time']=row[11]
 
-	for i, row in enumerate(rows[5:]):
 		if not row: continue
-		row_idx = i + 5
-		d = frappe._dict(zip(columns, row))
-		d["doctype"] = "Attendance"
-		if d.name:
-			d["docstatus"] = frappe.db.get_value("Attendance", d.name, "docstatus")
+		row_idx = i + 6
+		#d = frappe._dict(zip(columns, row))
+		
+		dict1["doctype"] = "Attendance"
+		if dict1.get('name'):
+			dict1["docstatus"] = frappe.db.get_value("Attendance", dict1.get('name'), "docstatus")
 
 		try:
-			check_record(d)
-			ret.append(import_doc(d, "Attendance", 1, row_idx, submit=True))
+			check_record(dict1)
+			if row[1] and row[3]:
+				att_id=import_doc(dict1, "Attendance", 1, row_idx, submit=True)
+				make_child_entry(att_id,dict1,worked_hours)
+				ret.append('Inserted row (#%d) %s' % (row_idx + 1, getlink('Attendance',
+			att_id)))
+			else:
+				#frappe.errprint([worked_hours])
+				make_child_entry(att_id,dict1,worked_hours)
+
+			#frappe.errprint(d.name)
 		except Exception, e:
 			error = True
 			ret.append('Error for row (#%d) %s : %s' % (row_idx,
@@ -134,4 +159,56 @@ def upload():
 		frappe.db.rollback()
 	else:
 		frappe.db.commit()
-	return {"messages": ret, "error": error}
+
+	return {"messages": ret, "error": error,"name":dict1.get('name')}
+
+def import_doc(d, doctype, overwrite, row_idx, submit=False, ignore_links=False):
+	#frappe.errprint("in import doc")
+	"""import main (non child) document"""
+	if d.get("name") and frappe.db.exists(doctype, d['name']):
+		if overwrite:
+			doc = frappe.get_doc(doctype, d['name'])
+			doc.ignore_links = ignore_links
+			doc.update(d)
+			if d.get("docstatus") == 1:
+				doc.update_after_submit()
+			else:
+				doc.save()
+			return 'Updated row (#%d) %s' % (row_idx + 1, getlink(doctype, d['name']))
+		else:
+			return 'Ignored row (#%d) %s (exists)' % (row_idx + 1,
+				getlink(doctype, d['name']))
+	else:
+		doc = frappe.get_doc(d)
+		doc.ignore_links = ignore_links
+		doc.insert()
+
+		if submit:
+			doc.submit()
+
+		return doc.get('name')
+
+
+def getlink(doctype, name):
+	return '<a href="#Form/%(doctype)s/%(name)s">%(name)s</a>' % locals()
+
+def make_child_entry(att_id,dict1,worked_hours):
+	import datetime as dt
+	start_dt = dt.datetime.strptime(dict1.get('in_time'), '%H:%M:%S')
+	end_dt = dt.datetime.strptime(dict1.get('out_time'), '%H:%M:%S')
+	diff = (end_dt - start_dt) 
+	att=frappe.new_doc("Attendance Time Sheets")
+	att.in_time=dict1.get('in_time')
+	att.out_time=dict1.get('out_time')
+	att.parent=att_id
+	att.parentfield='attendance_time_sheet'
+	att.parenttype='Attendance'
+	att.hours=diff.seconds/60
+	att.docstatus=1
+	att.save(ignore_permissions=True)
+	worked_hours=cint(worked_hours) + cint(diff.seconds/60)
+	#frappe.errprint(worked_hours)
+	prt = frappe.get_doc('Attendance', att_id)
+	total_hours=((cint(prt.total_hours)*60)+cint(worked_hours))/60
+	frappe.db.sql("""update `tabAttendance` set total_hours='%s' where name='%s'"""%(total_hours,att_id))
+	frappe.db.commit()

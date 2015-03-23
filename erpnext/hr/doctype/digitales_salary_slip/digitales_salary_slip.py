@@ -67,10 +67,13 @@ class DigitalesSalarySlip(Document):
 			salary_structure=frappe.db.sql("""select digitales_salary_structure from `tabEmployee`
 						where name='%s'"""%self.employee)
 			if salary_structure[0][0]=='Yes':
+				if diff==14:
 
-				struct = self.check_sal_struct()
-				if struct:
-					self.pull_sal_struct(struct)
+					struct = self.check_sal_struct()
+					if struct:
+						self.pull_sal_struct(struct)
+				else:
+					frappe.throw("Since digitales salary structure is Yes in Employee master and we are createing salary stucture forthnightly for current employee so date difference must be 14")
 
 			elif salary_structure[0][0]=='No':
 				rate=frappe.db.get_value("Employee",self.employee ,"hour_rate")
@@ -211,6 +214,7 @@ class DigitalesSalarySlip(Document):
 			frappe.throw("There is no any attendance marked for the employee='%s' for the dates in between,from date='%s' and to date='%s'"%(self.employee,self.from_date,self.to_date))
 
 	def check_sal_struct(self):
+		#frappe.errprint("in check sal struct")
 		struct = frappe.db.sql("""select name from `tabSalary Structure`
 			where employee=%s and is_active = 'Yes'""", self.employee)
 		if not struct:

@@ -71,9 +71,16 @@ def get_data():
 					"description":_("Generate Salary Slips"),
 					"hide_count": True
 				},
+				# {
+				# 	"type": "doctype",
+				# 	"name": "Upload Attendance",
+				# 	"description":_("Upload attendance from a .csv file"),
+				# 	"hide_count": True
+				# },
+
 				{
 					"type": "doctype",
-					"name": "Upload Attendance",
+					"name": "Digitales Upload Attendance",
 					"description":_("Upload attendance from a .csv file"),
 					"hide_count": True
 				},
