@@ -43,12 +43,13 @@ class Item(WebsiteGenerator):
 		self.check_warehouse_is_set_for_stock_item()
 		self.check_stock_uom_with_bin()
 		status=check_uom_conversion(self.name)
-		frappe.errprint(status)
+		#frappe.errprint(status)
 		if status==False:
 			self.add_default_uom_in_conversion_factor_table()
 		elif status==True:
 			pass
-
+		elif status==None:
+			pass
 		self.validate_conversion_factor()
 		self.validate_item_type()
 		self.check_for_active_boms()
@@ -83,7 +84,7 @@ class Item(WebsiteGenerator):
 				raise_exception=WarehouseNotSet)
 
 	def add_default_uom_in_conversion_factor_table(self):
-		frappe.errprint("add_default_uom_in_conversion_factor_table")
+		#frappe.errprint("add_default_uom_in_conversion_factor_table")
 		uom_conv_list = [d.uom for d in self.get("uom_conversion_details")]
 		if self.stock_uom not in uom_conv_list:
 			ch = self.append('uom_conversion_details', {})

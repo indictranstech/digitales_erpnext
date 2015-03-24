@@ -50,6 +50,12 @@ class Attendance(Document):
 		self.validate_att_date()
 		self.validate_duplicate_record()
 		self.check_leave_record()
+		self.validate_time()
+
+	def validate_time(self):
+		# frappe.errprint("in validate")
+		# for d in self.get('attendance_time_sheet'):
+		pass
 		
 	def validate_total_hours(self):
 		frappe.errprint(self.total_hours)
