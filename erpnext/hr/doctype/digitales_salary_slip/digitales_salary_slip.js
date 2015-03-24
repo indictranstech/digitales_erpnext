@@ -37,17 +37,18 @@ cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 			msgprint("From Date must be less than To Date")
 		}
 		if(doc.employee){
-			if(diffDays == 14){
-				console.log("in from date date diff")
-				console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
-				var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
-				get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
-				refresh_field('total_days_in_month')	
-				});
-			}
-			else{
-				msgprint("Dates diffrence is not equal to the two weeks")
-			}
+			//if(diffDays == 14){
+			console.log("in from date date diff")
+			console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
+			var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
+			get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
+			refresh_field('total_days_in_month')	
+			refresh_field('employee')
+			});
+			//}
+			//else{
+			//	msgprint("Dates diffrence is not equal to the two weeks")
+			//}
 		}
      
 	}
@@ -74,15 +75,16 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		}
 		if(doc.employee){
 			//console.log(diffDays)
-			if(diffDays == 14){
-				var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
-				get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
-					refresh_field('total_days_in_month');
-				});
-			}
-			else{
-				msgprint("Dates diffrence is not equal to the two weeks")
-			}
+			//if(diffDays == 14){
+			var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
+			get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
+				refresh_field('total_days_in_month');
+				refresh_field('employee')
+			});
+			//}
+			//else{
+			//	msgprint("Dates diffrence is not equal to the two weeks")
+			//}
 		}
 		else{
 			console.log("bye")
@@ -91,6 +93,7 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 	else{
 		console.log("g Bye")
 	}
+
 };
 
 cur_frm.cscript.employee= function(doc, cdt, cdn) {
@@ -106,17 +109,18 @@ cur_frm.cscript.employee= function(doc, cdt, cdn) {
 
 		//console.log(diffDays)
 		//alert("hiiii")
-		if(diffDays == 14){
-			var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
-			//alert("hi");
-			get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
-				//console.log(r.total_days_in_month)	
-				refresh_field('total_days_in_month');
-			});
-		}
-		else{
-			msgprint("Dates diffrence is not equal to the two weeks")
-		}
+		//if(diffDays == 14){
+		var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
+		//alert("hi");
+		get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
+			//console.log(r.total_days_in_month)	
+			refresh_field('total_days_in_month');
+			refresh_field('employee')
+		});
+		//}
+		//else{
+		//	msgprint("Dates diffrence is not equal to the two weeks")
+		//}
 	}
 };
 
@@ -131,13 +135,14 @@ cur_frm.cscript.fiscal_year = function(doc,dt,dn){
 		if (doc.from_date && doc.to_date && doc.employee)
 		{ 
 			//if(diffDays == 14){
-				return $c_obj(doc, 'get_emp_and_leave_details',diffDays,function(r, rt) {
-				var doc = locals[dt][dn];
-				cur_frm.refresh();
-				calculate_all(doc, dt, dn);
-				refresh_field(['total_days_in_month','payment_days','leave_without_pay'])
-				refresh_field(['earning_details','deduction_details'])
-				});
+			return $c_obj(doc, 'get_emp_and_leave_details',diffDays,function(r, rt) {
+			var doc = locals[dt][dn];
+			cur_frm.refresh();
+			calculate_all(doc, dt, dn);
+			refresh_field(['total_days_in_month','payment_days','leave_without_pay','employee'])
+			refresh_field(['earning_details','deduction_details'])
+			
+			});
 			//}
 			//else{
 			//	msgprint("Dates diffrence is not equal to the two weeks")

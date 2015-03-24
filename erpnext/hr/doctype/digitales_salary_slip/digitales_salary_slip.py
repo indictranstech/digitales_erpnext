@@ -24,6 +24,7 @@ class DigitalesSalarySlip(Document):
 		#salary_slip=self.get_salary_slip(self.from_date)
 		holidays = self.get_holidays_for_employee(args)
 		self.total_days_in_month=args['date_diff']-len(holidays)
+		self.employee=''
 		# self.total_days_in_month=14
 
 	def get_salary_slip(self,from_date):
@@ -73,6 +74,7 @@ class DigitalesSalarySlip(Document):
 					if struct:
 						self.pull_sal_struct(struct)
 				else:
+					self.employee=''
 					frappe.throw("Since digitales salary structure is Yes in Employee master and we are createing salary stucture forthnightly for current employee so date difference must be 14")
 
 			elif salary_structure[0][0]=='No':

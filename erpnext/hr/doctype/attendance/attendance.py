@@ -3,7 +3,7 @@
 
 from __future__ import unicode_literals
 import frappe
-
+from frappe.utils import add_days, cint, cstr
 from frappe.utils import getdate, nowdate
 from frappe import _
 from frappe.model.document import Document
@@ -51,11 +51,56 @@ class Attendance(Document):
 		self.validate_duplicate_record()
 		self.check_leave_record()
 		self.validate_time()
+		self.validate_att_joining_date()
+		self.validate_attendance_timing()
+
+	def validate_attendance_timing(self):
+		listt=[]
+		time=''
+		for d in self.get('attendance_time_sheet'):
+			time=d.out_time
+			break
+		#frappe.errprint(time)
+		for d in self.get('attendance_time_sheet'):
+			#frappe.errprint(d.idx)
+			if d.idx==1:
+				pass
+			else:
+				#frappe.errprint(d.in_time)
+				if time >= d.in_time:
+					frappe.throw("for row '"+cstr(d.idx)+"' in time must be greater than the out time of its previous row ")
+
+	def validate_att_joining_date(self):
+		from datetime import datetime
+		#frappe.errprint("in validate")
+		if self.employee:
+			date=frappe.db.sql("""select date_of_joining from `tabEmployee` where 
+							name='%s'"""%self.employee,as_list=1)
+			if date:
+				d1 = datetime.strptime(date[0][0], "%Y-%m-%d")
+				d2 = datetime.strptime(self.att_date, "%Y-%m-%d")
+				if d1>d2:
+					frappe.throw("You are trying to mark attendance for past days when employee is not joined")
 
 	def validate_time(self):
-		# frappe.errprint("in validate")
-		# for d in self.get('attendance_time_sheet'):
-		pass
+		#frappe.errprint("in validate time")
+		in_time=[]
+		out_time=[]
+		for d in self.get('attendance_time_sheet'):
+			if d.in_time:
+				#frappe.errprint(d.in_time)
+				if d.in_time in in_time:
+					frappe.throw("Duplicate In Time Entry")
+				else:
+					in_time.append(d.in_time)
+			if d.out_time:
+				if d.out_time in out_time:
+					frappe.throw("Duplicate Out Time Entry")
+				else:
+					out_time.append(d.out_time)
+
+		# frappe.errprint(in_time)
+		# frappe.errprint(out_time)
 		
 	def validate_total_hours(self):
 		frappe.errprint(self.total_hours)

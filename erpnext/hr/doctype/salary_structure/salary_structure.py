@@ -67,12 +67,20 @@ class SalaryStructure(Document):
 		if old_employee and self.employee != old_employee:
 			frappe.throw(_("Employee can not be changed"))
 
+	def check_employee_status(self):
+		status=frappe.db.sql("""select digitales_salary_structure from `tabEmployee` where name='%s'
+		 """%self.employee,as_list=1)
+
+		if status:
+			if status[0][0]=='No':
+				frappe.throw("Since we have mentioned digitales salary structure 'No' for employee='"+self.employee+"', you can not create salary structure against this employee")
 
 	def validate(self):
 		self.check_existing()
 		self.validate_amount()
 		self.validate_employee()
 		set_employee_name(self)
+		self.check_employee_status()
 
 
 @frappe.whitelist()

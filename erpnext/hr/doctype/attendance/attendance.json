@@ -126,6 +126,7 @@
    "read_only": 1
   }, 
   {
+   "depends_on": "eval:doc.status!='Absent'", 
    "fieldname": "attendance_time_sheets", 
    "fieldtype": "Section Break", 
    "label": "Attendance Time Sheet", 
@@ -136,7 +137,7 @@
  "icon": "icon-ok", 
  "idx": 1, 
  "is_submittable": 1, 
- "modified": "2015-01-14 17:05:46.153796", 
+ "modified": "2015-03-24 20:44:12.767455", 
  "modified_by": "Administrator", 
  "module": "HR", 
  "name": "Attendance", 

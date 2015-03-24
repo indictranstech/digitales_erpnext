@@ -391,6 +391,7 @@
   {
    "fieldname": "dii", 
    "fieldtype": "Data", 
+   "hidden": 1, 
    "label": "Difference", 
    "permlevel": 0, 
    "precision": ""
@@ -729,7 +730,7 @@
  "is_submittable": 1, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-18 16:22:47.245160", 
+ "modified": "2015-03-24 21:49:32.539763", 
  "modified_by": "Administrator", 
  "module": "HR", 
  "name": "Digitales Salary Slip", 
