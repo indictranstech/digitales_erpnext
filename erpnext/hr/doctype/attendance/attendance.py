@@ -57,19 +57,14 @@ class Attendance(Document):
 	def validate_attendance_timing(self):
 		listt=[]
 		time=''
+		prev_time = None
 		for d in self.get('attendance_time_sheet'):
-			time=d.out_time
-			break
-		#frappe.errprint(time)
-		for d in self.get('attendance_time_sheet'):
-			#frappe.errprint(d.idx)
-			if d.idx==1:
-				pass
-			else:
-				#frappe.errprint(d.in_time)
+			time=prev_time
+			frappe.errprint(time)
+			if d.idx!=1:
 				if time >= d.in_time:
 					frappe.throw("for row '"+cstr(d.idx)+"' in time must be greater than the out time of its previous row ")
-
+			prev_time = d.out_time
 	def validate_att_joining_date(self):
 		from datetime import datetime
 		#frappe.errprint("in validate")

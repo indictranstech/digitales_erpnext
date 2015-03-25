@@ -46,6 +46,11 @@ def get_data():
 					"name": "Item",
 					"description": _("All Products or Services."),
 				},
+				{
+					"type": "doctype",
+					"name": "Budget",
+					"description": _("Budget Details."),
+				},
 			]
 		},
 		{

@@ -128,7 +128,7 @@ def upload():
 			
 		dict1['in_time'] = row[10]
 		dict1['out_time']=row[11]
-
+		#frappe.errprint(dict1)
 		if not row: continue
 		row_idx = i + 6
 		#d = frappe._dict(zip(columns, row))

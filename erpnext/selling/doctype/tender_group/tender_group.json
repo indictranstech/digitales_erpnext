@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:tender_group", 
  "creation": "2015-03-03 21:10:30.503839", 
@@ -24,7 +24,7 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 0, 
+   "reqd": 1, 
    "search_index": 0, 
    "set_only_once": 0
   }
@@ -36,7 +36,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-03 21:10:41.351940", 
+ "modified": "2015-03-25 18:59:18.490946", 
  "modified_by": "Administrator", 
  "module": "Selling", 
  "name": "Tender Group", 

@@ -38,8 +38,8 @@ cur_frm.cscript.from_date= function(doc, cdt, cdn) {
 		}
 		if(doc.employee){
 			//if(diffDays == 14){
-			console.log("in from date date diff")
-			console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
+			//console.log("in from date date diff")
+			//console.log(frappe.datetime.get_diff(doc.to_date, doc.from_date))
 			var arg = {'month_start_date':doc.from_date, 'month_end_date':doc.to_date,'employee':doc.employee,'date_diff':diffDays}
 			get_server_fields('get_weeklyofday_details',JSON.stringify(arg),doc.to_date,doc, cdt, cdn, 1 , function(r){
 			refresh_field('total_days_in_month')	
@@ -70,9 +70,6 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		if(date2<date1){
 			msgprint("To Date must be greater than From Date")
 		}
-		else{
-			console.log("hi")
-		}
 		if(doc.employee){
 			//console.log(diffDays)
 			//if(diffDays == 14){
@@ -86,12 +83,6 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 			//	msgprint("Dates diffrence is not equal to the two weeks")
 			//}
 		}
-		else{
-			console.log("bye")
-		}
-	}
-	else{
-		console.log("g Bye")
 	}
 
 };
