@@ -21,6 +21,7 @@ erpnext.hr.EmployeeController = frappe.ui.form.Controller.extend({
 
 	refresh: function() {
 		//hide_field('hour_rate')
+		hide_field('hour_rate');
 		var me = this;
 		erpnext.toggle_naming_series();
 		// if(!this.frm.doc.__islocal && this.frm.doc.__onload &&

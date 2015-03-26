@@ -22,8 +22,10 @@ class DigitalesSalaryManager(Document):
 		cond += self.get_joining_releiving_condition()
 
 		emp_list=frappe.db.sql("""select t1.name from `tabEmployee` t1
-				where t1.status='Active' and t1.docstatus!=2 %s"""%cond,debug=1)
+				where t1.status='Active' and t1.docstatus!=2 and digitales_salary_structure='%s' %s"""%(self.digitales_salary_structure,cond),debug=1)
 
+		#frappe.errprint(emp_list)
+		#frappe.errprint(dfghjkl)
 		# emp_list = frappe.db.sql("""
 		# 	select t1.name
 		# 	from `tabEmployee` t1, `tabSalary Structure` t2
