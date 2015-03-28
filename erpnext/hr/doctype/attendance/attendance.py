@@ -60,7 +60,7 @@ class Attendance(Document):
 		prev_time = None
 		for d in self.get('attendance_time_sheet'):
 			time=prev_time
-			frappe.errprint(time)
+			#frappe.errprint(time)
 			if d.idx!=1:
 				if time >= d.in_time:
 					frappe.throw("for row '"+cstr(d.idx)+"' in time must be greater than the out time of its previous row ")
@@ -98,7 +98,7 @@ class Attendance(Document):
 		# frappe.errprint(out_time)
 		
 	def validate_total_hours(self):
-		frappe.errprint(self.total_hours)
+		#frappe.errprint(self.total_hours)
 		if self.total_hours<=7.30:
 			pass
 		else:

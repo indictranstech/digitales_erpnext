@@ -93,12 +93,16 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		if(date2<date1){
 			msgprint("To Date must be greater than From Date")
 		}
-		doc.digitales_salary_structure==null
-		refresh_field('digitales_salary_structure');
+		if (doc.digitales_salary_structure=='Yes' && diffDays!=14){
+			msgprint("If digitales salary structure is Yes then date diffrence between from date & to date must be equal to 14")
+		}
+		// doc.digitales_salary_structure==null
+		// refresh_field('digitales_salary_structure');
 		// if(diffDays != 14){
 		// 	msgprint("Dates diffrence is not equal to the two weeks")
 		// }
 	}
+
 };
 
 cur_frm.cscript.digitales_salary_structure= function(doc,cdt,cdn){
