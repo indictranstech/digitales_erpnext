@@ -185,36 +185,40 @@ class DigitalesSalarySlip(Document):
 
 	def get_attendance_days(self):
 		#frappe.errprint("in attendance days")
-		#d = getdate(self.to_date)- timedelta(days=1)
+		from datetime import datetime
+		from frappe.utils import money_in_words
+		d1 = datetime.strptime(self.from_date, "%Y-%m-%d")
+		d2 = datetime.strptime(self.to_date, "%Y-%m-%d")
+		diff=abs((d2 - d1).days)
+		d = getdate(self.to_date)- timedelta(days=1)
 		# frappe.errprint(d)
 		att_dates=frappe.db.sql("""select count(att_date),ifnull(sum(total_hours),0)from `tabAttendance` where docstatus=1 and status='Present'
-						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
-		#frappe.errprint(att_dates)
+						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,d),debug=1)
+		attendance_days=0
+		attendance_hours=0
 		if att_dates:
+			if att_dates[0][0]== diff:
+				attendance_days=att_dates[0][0]
+				attendance_hours=att_dates[0][1]
 
-			attendance_days=att_dates[0][0]
-			attendance_hours=att_dates[0][1]
+			att_dates1=frappe.db.sql("""select count(att_date) ,ifnull(sum(total_hours),0) from `tabAttendance` where docstatus=1 and status='Half Day' 
+							and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,d),debug=1)
+			#frappe.errprint(att_dates1)
+			if att_dates1:
+				attendance_days=att_dates[0][0] + (att_dates1[0][0]*0.5)
+				attendance_hours=attendance_hours + att_dates1[0][1]
+				if attendance_days > 0 and attendance_hours > 0:
 
-		att_dates1=frappe.db.sql("""select count(att_date) ,ifnull(sum(total_hours),0) from `tabAttendance` where docstatus=1 and status='Half Day' 
-						and employee='%s' and att_date between '%s' and '%s'"""%(self.employee,self.from_date,self.to_date),debug=1)
-		#frappe.errprint(att_dates1)
-		if att_dates1:
-			attendance_days=att_dates[0][0] + (att_dates1[0][0]*0.5)
-			attendance_hours=attendance_hours + att_dates1[0][1]
-			if attendance_days > 0 and attendance_hours > 0:
+					return attendance_days,attendance_hours
+				else:
+
+					frappe.throw("There is total '"+cstr(diff)+"' working days and attendance marked only '"+cstr(attendance_days)+"' days for employee='%s' against the dates in between,from date='%s' and to date='%s'"%(self.employee,self.from_date,self.to_date))
+
+			if  attendance_day >0 and attendance_hours >0:
 
 				return attendance_days,attendance_hours
-			else:
-
-				frappe.throw("There is no any attendance marked for the employee='%s' for the dates in between,from date='%s' and to date='%s'"%(self.employee,self.from_date,self.to_date))
-
-
-		if  attendance_day >0 and attendance_hours >0:
-
-			return attendance_days,attendance_hours
 		else:
-			frappe.throw("There is no any attendance marked for the employee='%s' for the dates in between,from date='%s' and to date='%s'"%(self.employee,self.from_date,self.to_date))
-
+			frappe.throw("There is total '"+cstr(diff)+"' working days and attendance marked only '"+cstr(attendance_days)+"' days for employee='%s' against the dates in between,from date='%s' and to date='%s'"%(self.employee,self.from_date,self.to_date))
 	def check_sal_struct(self):
 		#frappe.errprint("in check sal struct")
 		struct = frappe.db.sql("""select name from `tabSalary Structure`
@@ -223,8 +227,6 @@ class DigitalesSalarySlip(Document):
 			msgprint(_("Please create Salary Structure for employee {0}").format(self.employee))
 			self.employee = None
 		return struct and struct[0][0] or ''
-
-
 
 
 	def pull_sal_struct(self, struct):
