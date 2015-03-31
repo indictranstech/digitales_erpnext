@@ -43,7 +43,8 @@ class Item(WebsiteGenerator):
 		self.check_warehouse_is_set_for_stock_item()
 		self.check_stock_uom_with_bin()
 		status=check_uom_conversion(self.name)
-		#frappe.errprint(status)
+		print "hhhhhhhhhhhhhhhhhh"
+		frappe.errprint(status)
 		if status==False:
 			self.add_default_uom_in_conversion_factor_table()
 		elif status==True:
