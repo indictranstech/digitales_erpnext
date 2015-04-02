@@ -100,7 +100,7 @@ class SalesOrder(SellingController):
 		self.validate_proj_cust()
 		self.validate_po()
 		self.validate_uom_is_integer("stock_uom", "qty")
-		self.validate_for_items()
+		# self.validate_for_items()
 		self.validate_warehouse()
 
 		from erpnext.stock.doctype.packed_item.packed_item import make_packing_list
@@ -366,22 +366,24 @@ def make_sales_invoice(source_name, target_doc=None):
 	def create_sales_invoice_item_entry(name,target):
 		service_details=frappe.db.sql("""select s.process,s.qty,s.file_name from `tabShelf Ready Service Details` s 
 			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
-		for i in service_details:
-			#frappe.errprint(target)
-			si = target.append('entries', {})
-			si.item_code=i[0]
-			si.item_name=i[0]
-			si.description=i[0]
-			si.qty=i[1]
-			#si.rate=i[2]
-			#si.amount=i[3]
-			#si.shelf_ready_service_name=i[0]
-			si.marcfile_name=i[2]
-			si.sales_order=source_name
-			si.income_account='Sales - D'
-			si.cost_center='Main - D'
-			si.process_id= name
-			#update_process_entry(name)
+		if service_details:
+			
+			for i in service_details:
+				#frappe.errprint(target)
+				si = target.append('entries', {})
+				si.item_code=i[0]
+				si.item_name=i[0]
+				si.description=i[0]
+				si.qty=i[1]
+				#si.rate=i[2]
+				#si.amount=i[3]
+				#si.shelf_ready_service_name=i[0]
+				si.marcfile_name=i[2]
+				si.sales_order=source_name
+				si.income_account='Sales - D'
+				si.cost_center='Main - D'
+				si.process_id= name
+				#update_process_entry(name)
 
 	def set_missing_values(source, target):
 		target.is_pos = 0
