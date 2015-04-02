@@ -95,9 +95,12 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		}
 		if (doc.digitales_salary_structure=='Yes' && diffDays!=14){
 			msgprint("If digitales salary structure is Yes then date diffrence between from date & to date must be equal to 14")
+			doc.to_date=''
 		}
-		// doc.digitales_salary_structure==null
+		// doc.digitales_salary_structure = ''
+		// //doc.to_date = ''
 		// refresh_field('digitales_salary_structure');
+		refresh_field('to_date');
 		// if(diffDays != 14){
 		// 	msgprint("Dates diffrence is not equal to the two weeks")
 		// }
@@ -116,8 +119,10 @@ cur_frm.cscript.digitales_salary_structure= function(doc,cdt,cdn){
 			var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 			if (diffDays!=14){
 				msgprint("If digitales salary structure is Yes then date diffrence between from date & to date must be equal to 14")
-
+				doc.to_date=''
 			}
+			
+			refresh_field('to_date');
 		}
 	}
 	else{

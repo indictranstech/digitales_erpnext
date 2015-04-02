@@ -16,8 +16,8 @@ cur_frm.cscript.load_defaults = function(doc, dt, dn) {
 cur_frm.add_fetch('lead_name', 'company_name', 'customer_name');
 cur_frm.add_fetch('default_sales_partner','commission_rate','default_commission_rate');
 
-cur_frm.add_fetch('name1','process_type','process_type');
-cur_frm.add_fetch('name1','charge','charge');
+cur_frm.add_fetch('name1','item_group','process_type');
+//cur_frm.add_fetch('name1','charge','charge');
 
 cur_frm.cscript.refresh = function(doc, dt, dn) {
 	cur_frm.cscript.setup_dashboard(doc);
@@ -101,4 +101,11 @@ cur_frm.fields_dict['default_price_list'].get_query = function(doc, cdt, cdn) {
 	return{
 		filters:{'selling': 1}
 	}
+}
+
+
+cur_frm.fields_dict['shelf_ready_services_details'].grid.get_field('name1').get_query = function(doc, cdt, cdn) {
+
+   	return {filters: { is_service_item: "Yes"}}
+
 }

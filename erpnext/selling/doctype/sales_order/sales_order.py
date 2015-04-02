@@ -94,7 +94,7 @@ class SalesOrder(SellingController):
 	def validate(self):
 		super(SalesOrder, self).validate()
 
-		self.validate_order_type()
+		#self.validate_order_type()
 		self.validate_delivery_date()
 		self.validate_mandatory()
 		self.validate_proj_cust()
@@ -364,7 +364,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		frappe.db.commit()
 
 	def create_sales_invoice_item_entry(name,target):
-		service_details=frappe.db.sql("""select p.process_type, s.qty,s.charge,s.amount,s.process,s.file_name from `tabShelf Ready Service Details` s 
+		service_details=frappe.db.sql("""select s.process,s.qty,s.file_name from `tabShelf Ready Service Details` s 
 			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
 		for i in service_details:
 			#frappe.errprint(target)
@@ -373,10 +373,10 @@ def make_sales_invoice(source_name, target_doc=None):
 			si.item_name=i[0]
 			si.description=i[0]
 			si.qty=i[1]
-			si.rate=i[2]
-			si.amount=i[3]
-			si.shelf_ready_service_name=i[4]
-			si.marcfile_name=i[5]
+			#si.rate=i[2]
+			#si.amount=i[3]
+			#si.shelf_ready_service_name=i[0]
+			si.marcfile_name=i[2]
 			si.sales_order=source_name
 			si.income_account='Sales - D'
 			si.cost_center='Main - D'
