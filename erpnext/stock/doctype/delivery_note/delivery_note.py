@@ -110,7 +110,7 @@ class DeliveryNote(SellingController):
 				service_item=frappe.db.sql("""select is_Service_item from `tabItem` where name='%s'"""%d.item_code,as_list=1)
 				if service_item:
 					if service_item[0][0]=='Yes':
-						frappe.throw(" '"+d.item_code+"' is a service item we can delivered only non service item.",raise_exception=1)
+						frappe.throw(" '"+d.item_code+"' is a service item we can delivered only non service item.")
 
 	def validate_with_previous_doc(self):
 		items = self.get("delivery_note_details")

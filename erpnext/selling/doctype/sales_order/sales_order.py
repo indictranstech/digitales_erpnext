@@ -377,8 +377,8 @@ def make_sales_invoice(source_name, target_doc=None):
 				#si.shelf_ready_service_name=i[0]
 				si.marcfile_name=i[2]
 				si.sales_order=source_name
-				si.income_account='Sales - D'
-				si.cost_center='Main - D'
+				#si.income_account='Sales - D'
+				#si.cost_center='Main - D'
 				si.process_id= name
 				#update_process_entry(name)
 
