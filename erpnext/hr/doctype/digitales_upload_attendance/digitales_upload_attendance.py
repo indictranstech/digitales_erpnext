@@ -47,7 +47,7 @@ def add_data(w, args):
 	employees = get_active_employees()
 	existing_attendance_records = get_existing_attendance_records(args)
 	for date in dates:
-		frappe.errprint(date)
+		#frappe.errprint(date)
 		for employee in employees:
 			existing_attendance = {}
 			if existing_attendance_records \

@@ -172,8 +172,8 @@ class DigitalesSalarySlip(Document):
 				frappe.throw(_("Employee relieved on {0} must be set as 'Left'").format(emp["relieving_date"]))
 
 		if emp['date_of_joining']:
-			frappe.errprint(type(emp['date_of_joining']))
-			frappe.errprint(type(m['month_start_date']))
+			#frappe.errprint(type(emp['date_of_joining']))
+			#frappe.errprint(type(m['month_start_date']))
 			if getdate(emp['date_of_joining']) > getdate(m['month_start_date']) and \
 				getdate(emp['date_of_joining']) < getdate(m['month_end_date']):
 					payment_days = payment_days - getdate(emp['date_of_joining']).day + 1

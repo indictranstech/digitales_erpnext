@@ -114,7 +114,7 @@ class DigitalesSalaryManager(Document):
 					"department":self.department,
 					"designation":self.designation,
 				})
-				frappe.errprint(ss)
+				#frappe.errprint(ss)
 				ss.insert()
 				ss_list.append(ss.name)
 
@@ -136,7 +136,7 @@ class DigitalesSalaryManager(Document):
 			which are not submitted
 		"""
 		cond = self.get_filter_condition()
-		frappe.errprint(cond)
+		#frappe.errprint(cond)
 		ss_list = frappe.db.sql("""
 			select t1.name from `tabDigitales Salary Slip` t1
 			where t1.docstatus = 0 and t1.from_date = %s and t1.to_date = %s and t1.fiscal_year = %s %s
@@ -150,7 +150,7 @@ class DigitalesSalaryManager(Document):
 			Submit all salary slips based on selected criteria
 		"""
 		ss_list = self.get_sal_slip_list()
-		frappe.errprint([ss_list,"salary slip"])
+		#frappe.errprint([ss_list,"salary slip"])
 		not_submitted_ss = []
 		for ss in ss_list:
 			ss_obj = frappe.get_doc("Digitales Salary Slip",ss[0])
@@ -159,7 +159,7 @@ class DigitalesSalaryManager(Document):
 				ss_obj.submit()
 			except Exception,e:
 				not_submitted_ss.append(ss[0])
-				frappe.msgprint(e)
+				#frappe.msgprint(e)
 				continue
 
 		return self.create_submit_log(ss_list, not_submitted_ss)

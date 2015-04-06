@@ -24,12 +24,12 @@ erpnext.stock.DeliveryNoteController = erpnext.selling.SellingController.extend(
 					return item.against_sales_invoice ? true : false;
 				});
 
-			if(!from_sales_invoice)
-				cur_frm.add_custom_button(__('Make Invoice'), this.make_sales_invoice);
+			// if(!from_sales_invoice)
+			// 	cur_frm.add_custom_button(__('Make Invoice'), this.make_sales_invoice);
 		}
 
-		if(flt(doc.per_installed, 2) < 100 && doc.docstatus==1)
-			cur_frm.add_custom_button(__('Make Installation Note'), this.make_installation_note);
+		// if(flt(doc.per_installed, 2) < 100 && doc.docstatus==1)
+		// 	cur_frm.add_custom_button(__('Make Installation Note'), this.make_installation_note);
 
 		if (doc.docstatus==1) {
 			cur_frm.appframe.add_button(__('Send SMS'), cur_frm.cscript.send_sms, "icon-mobile-phone");

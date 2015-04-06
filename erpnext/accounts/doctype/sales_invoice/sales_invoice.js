@@ -90,7 +90,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 		// Show buttons only when pos view is active
 		if (doc.docstatus===0 && !this.pos_active) {
 			cur_frm.cscript.sales_order_btn();
-			cur_frm.cscript.delivery_note_btn();
+			//cur_frm.cscript.delivery_note_btn();
 		}
 	},
 
