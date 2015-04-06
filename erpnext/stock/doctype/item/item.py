@@ -217,7 +217,7 @@ class Item(WebsiteGenerator):
 	def validate_name_with_item_group(self):
 		# causes problem with tree build
 		if frappe.db.exists("Item Group", self.name):
-			frappe.throw(_("An Item Group exists with same name, please change the item name or rename the item group"))
+			frappe.throw(_("An Media exists with same name, please change the item name or rename the item group"))
 
 	def update_item_price(self):
 		frappe.db.sql("""update `tabItem Price` set item_name=%s,

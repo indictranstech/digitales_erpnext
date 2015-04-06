@@ -13,7 +13,7 @@ frappe.query_reports["Unreceived Purchase Orders"] = {
 		},
 		{
 			"fieldname":"item_group",
-			"label": __("Item Group"),
+			"label": __("Media"),
 			"fieldtype": "Link",
 			"options": "Item Group"
 		},
@@ -25,10 +25,10 @@ frappe.query_reports["Unreceived Purchase Orders"] = {
 			"options": "Budget"
 		},
 		{
-			"fieldname":"order_type",
+			"fieldname":"new_order_type",
 			"label": __("Order Type"),
 			"fieldtype": "Select",
-			"options": "\nSales\nMaintenance\nShopping Cart"
+			"options": "\nStandard Order\nStanding Order\nReader Request"
 		},
 		{
 			"fieldname":"service_type",

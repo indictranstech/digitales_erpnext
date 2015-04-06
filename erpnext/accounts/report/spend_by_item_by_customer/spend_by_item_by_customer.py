@@ -21,10 +21,10 @@ def execute(filters=None):
 
 
 def get_columns():
-	return [_("Customer") + ":Link/Customer:130",_("Item") + ":Link/Item:130", _("Item Name") + "::100", _("Item Group") + ":Link/Item Group:100",
+	return [_("Customer") + ":Link/Customer:130",_("Item") + ":Link/Item:130", _("Item Name") + "::100", _("Media") + ":Link/Item Group:100",
 		 _("Description") + "::200",_("Qty") + ":Float:50", _("Budget") + ":Link/Budget:100", _("Order Type") + ":Data:100",
 		_("Price") + ":Currency:110", _("Monthly Spend") + ":Currency:110", _("YTD Spend Including Current Month") + ":Currency:110",
-		_("Invoice Number") + "::110", _("Invoice Date") + ":Datetime:95"]
+		_("Invoice Number") + ":Link/Sales Invoice:110", _("Invoice Date") + ":Datetime:95"]
 
 
 def get_sales_invoice_details(filters):
@@ -40,8 +40,8 @@ SELECT
     b.item_group as item_group,
     b.description as description,
     b.qty as quantity,
-    b.budget as budget,
-    a.order_type as order_type,
+    a.budget as budget,
+    a.new_order_type as order_type,
     b.rate as price,
     b.amount as amount,
     b.amount as monthly_spend,
@@ -59,9 +59,9 @@ WHERE
 def get_item_conditions(filters):
 	conditions = []
 	if filters.get("budget"):
-		conditions.append("budget='%(budget)s'"%filters)
-	if filters.get("order_type"):
-		conditions.append("order_type='%(order_type)s'"%filters)
+		conditions.append("a.budget='%(budget)s'"%filters)
+	if filters.get("new_order_type"):
+		conditions.append("new_order_type='%(new_order_type)s'"%filters)
 	if filters.get("service_type"):
 		conditions.append("service_type='%(service_type)s'"%filters)
 

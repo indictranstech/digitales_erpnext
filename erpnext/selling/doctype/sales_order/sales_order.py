@@ -336,7 +336,6 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.get_advances()
 		# To get process details against sales order for which you are generating sales invoice---------
 		if source.doctype=='Sales Order':
-			#frappe.errprint("in sales invocie")
 			get_shelf_service_details(source,source_name,target)
 			set_missing_values(source, target)
 			target.get_advances()
@@ -346,10 +345,8 @@ def make_sales_invoice(source_name, target_doc=None):
 		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
 				and docstatus=1 and sales_invoice_status='Not Done'"""%source_name,as_list=1)
 		if process:
-			#frappe.errprint(process)
 			for [name] in process:
 				create_sales_invoice_item_entry(name,target)
-				#update_process_entry()
 		update_sales_order_process_status(source_name)
 
 

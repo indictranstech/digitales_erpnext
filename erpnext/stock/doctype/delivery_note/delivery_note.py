@@ -101,6 +101,17 @@ class DeliveryNote(SellingController):
 		if not self.status: self.status = 'Draft'
 		if not self.installation_status: self.installation_status = 'Not Installed'
 
+		self.check_isservice_item_presence()
+
+
+	def check_isservice_item_presence(self):
+		for d in self.get('delivery_note_details'):
+			if d.item_code:
+				service_item=frappe.db.sql("""select is_Service_item from `tabItem` where name='%s'"""%d.item_code,as_list=1)
+				if service_item:
+					if service_item[0][0]=='Yes':
+						frappe.throw(" '"+d.item_code+"' is a service item we can delivered only non service item.",raise_exception=1)
+
 	def validate_with_previous_doc(self):
 		items = self.get("delivery_note_details")
 

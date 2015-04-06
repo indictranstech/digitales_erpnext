@@ -11,10 +11,10 @@ frappe.query_reports["Spend By Item By Customer"] = {
 			"options": "Budget"
 		},
 		{
-			"fieldname":"order_type",
+			"fieldname":"new_order_type",
 			"label": __("Order Type"),
 			"fieldtype": "Select",
-			"options": "\nSales\nMaintenance\nShopping Cart"
+			"options": "\nStandard Order\nStanding Order\nReader Request"
 		},
 		{
 			"fieldname":"service_type",

@@ -87,6 +87,17 @@ class Customer(TransactionBase):
 		self.update_credit_days_limit()
 		#create address and contact from lead
 		self.create_lead_address_contact()
+		self.check_itemis_service_item()
+
+	def check_itemis_service_item(self):
+		for d in self.get('shelf_ready_services_details'):
+			if d.name1:
+				service_item=frappe.db.sql("""select is_Service_item from `tabItem` where name='%s'"""%d.name1,as_list=1)
+				if service_item:
+					if service_item[0][0]=='No':
+						frappe.throw(" '"+d.name1+"' is not service item.",raise_exception=1)
+
+
 
 	def validate_name_with_customer_group(self):
 		if frappe.db.exists("Customer Group", self.name):

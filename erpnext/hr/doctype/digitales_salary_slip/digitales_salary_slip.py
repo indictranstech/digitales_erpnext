@@ -37,7 +37,7 @@ class DigitalesSalarySlip(Document):
 			dates=frappe.db.sql("""select from_date,to_date from `tabDigitales Salary Slip`
 			  where name='%s'"""%salary_slip[0][0])
 			#frappe.errprint(dates[0][0])
-			frappe.msgprint("Salary Slip is already generated for the employee='"+self.employee+"' for dates from date='%s' and to date='%s'"%(dates[0][0],dates[0][1]))
+			frappe.msgprint("Salary Slip is already generated for the employee='%s' for dates from date='%s' and to date='%s'"%(self.employee,dates[0][0],dates[0][1]))
 
 	def get_holidays_for_employee(self,m):
 		#frappe.errprint("get_holidays_for_employee")
