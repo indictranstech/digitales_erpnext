@@ -32,7 +32,7 @@ def get_sales_order_details(filters):
 	return frappe.db.sql("""select so.name, so.customer,soi.item_code,soi.item_name,
 		soi.item_group,soi.description,soi.release_date_of_item,soi.qty,soi.assigned_qty,
 		soi.actual_qty,
-		soi.rrp,so.budget,soi.gst_value,so.new_order_type,so.status,
+		so.selling_price_list,so.budget,soi.gst_value,so.new_order_type,so.status,
 		so.grand_total_export
 		 from `tabSales Order` so,
 		`tabSales Order Item` soi where 
