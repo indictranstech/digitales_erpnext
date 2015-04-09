@@ -87,7 +87,7 @@ class Customer(TransactionBase):
 		self.update_credit_days_limit()
 		#create address and contact from lead
 		self.create_lead_address_contact()
-		self.check_itemis_service_item()
+		# self.check_itemis_service_item()
 
 	def check_itemis_service_item(self):
 		for d in self.get('shelf_ready_services_details'):
