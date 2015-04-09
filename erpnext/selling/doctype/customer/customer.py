@@ -95,7 +95,7 @@ class Customer(TransactionBase):
 				service_item=frappe.db.sql("""select is_Service_item from `tabItem` where name='%s'"""%d.name1,as_list=1)
 				if service_item:
 					if service_item[0][0]=='No':
-						frappe.throw(" '"+d.name1+"' is not service item.",raise_exception=1)
+						frappe.throw(_("{0} is not service item").format(d.name1))
 
 
 
