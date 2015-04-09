@@ -89,7 +89,7 @@ cur_frm.cscript.to_date= function(doc, cdt, cdn) {
 		var date2 = new Date(doc.to_date);
 		var timeDiff = Math.abs(date2.getTime() - date1.getTime());
 		var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		//console.log(diffDays)
+		console.log(diffDays)
 		if(date2<date1){
 			msgprint("To Date must be greater than From Date")
 		}

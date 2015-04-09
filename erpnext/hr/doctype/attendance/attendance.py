@@ -44,6 +44,7 @@ class Attendance(Document):
 			frappe.throw(_("Employee {0} is not active or does not exist").format(self.employee))
 
 	def validate(self):
+		# frappe.errprint("in validate")
 		from erpnext.utilities import validate_status
 		validate_status(self.status, ["Present", "Absent", "Half Day"])
 		self.validate_fiscal_year()
@@ -55,19 +56,21 @@ class Attendance(Document):
 		self.validate_attendance_timing()
 
 	def validate_attendance_timing(self):
+		# frappe.errprint("in validate attendance timing")
 		listt=[]
 		time=''
 		prev_time = None
 		for d in self.get('attendance_time_sheet'):
 			time=prev_time
-			#frappe.errprint(time)
+			frappe.errprint(time)
 			if d.idx!=1:
 				if time >= d.in_time:
 					frappe.throw("for row '"+cstr(d.idx)+"' in time must be greater than the out time of its previous row ")
 			prev_time = d.out_time
+	
 	def validate_att_joining_date(self):
 		from datetime import datetime
-		#frappe.errprint("in validate")
+		# frappe.errprint("in validate")
 		if self.employee:
 			date=frappe.db.sql("""select date_of_joining from `tabEmployee` where 
 							name='%s'"""%self.employee,as_list=1)
@@ -78,12 +81,13 @@ class Attendance(Document):
 					frappe.throw("You are trying to mark attendance for past days when employee is not joined")
 
 	def validate_time(self):
-		#frappe.errprint("in validate time")
+		# frappe.errprint("in validate time")
 		in_time=[]
 		out_time=[]
+		frappe.errprint(type(self.get('attendance_time_sheet')))
 		for d in self.get('attendance_time_sheet'):
 			if d.in_time:
-				#frappe.errprint(d.in_time)
+				# frappe.errprint(d.in_time)
 				if d.in_time in in_time:
 					frappe.throw("Duplicate In Time Entry")
 				else:

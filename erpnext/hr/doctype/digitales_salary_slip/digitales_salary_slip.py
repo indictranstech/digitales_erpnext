@@ -31,7 +31,7 @@ class DigitalesSalarySlip(Document):
 		#frappe.errprint("in get salary slip")
 		salary_slip=frappe.db.sql("""select name from `tabDigitales Salary Slip` where employee='%s'
 				and to_date>'%s' and docstatus=0 or docstatus=1"""%(self.employee,from_date))
-		#frappe.errprint(salary_slip)
+		frappe.errprint(salary_slip)
 
 		if salary_slip:
 			dates=frappe.db.sql("""select from_date,to_date from `tabDigitales Salary Slip`
@@ -302,10 +302,11 @@ class DigitalesSalarySlip(Document):
 
 	def check_existing(self):
 		#frappe.errprint("check_existing")
+		d = getdate(self.from_date) + timedelta(days=1)
 		ret_exist = frappe.db.sql("""select name from `tabDigitales Salary Slip`
 			where (from_date between %s and %s or to_date between %s and %s) and fiscal_year = %s and docstatus != 2
 			and employee = %s and name != %s""",
-			(self.from_date, self.to_date,self.from_date,self.to_date,self.fiscal_year, self.employee, self.name),debug=1)
+			(self.from_date, self.to_date,d,self.to_date,self.fiscal_year, self.employee, self.name),debug=1)
 		#frappe.errprint(ret_exist)
 		if ret_exist:
 			dates=frappe.db.sql("""select from_date,to_date from `tabDigitales Salary Slip`

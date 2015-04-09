@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 from __future__ import unicode_literals
 import frappe
-from frappe.utils import cstr,cint, add_days, date_diff
+from frappe.utils import cstr,cint,flt, add_days, date_diff
 from frappe import _
 from frappe.utils.csvutils import UnicodeWriter
 from frappe.model.document import Document
@@ -125,10 +125,12 @@ def upload():
 		
 		if row[1] and row[3]:
 			dict1={'employee':row[1],'att_date':row[3],'status':row[4],'fiscal_year':row[5],'company':row[6],'naming_series':row[7],'employee_name':row[2]}
-			
+		
+		# dict1['attendance_time_sheet'] = {'in_time':row[10],'out_time':row[11]}
+
 		dict1['in_time'] = row[10]
 		dict1['out_time']=row[11]
-		#frappe.errprint(dict1)
+		frappe.errprint(dict1)
 		if not row: continue
 		row_idx = i + 6
 		#d = frappe._dict(zip(columns, row))
@@ -140,6 +142,7 @@ def upload():
 		try:
 			check_record(dict1)
 			if row[1] and row[3]:
+				#frappe.errprint(dict1)
 				att_id=import_doc(dict1, "Attendance", 1, row_idx, submit=True)
 				make_child_entry(att_id,dict1,worked_hours)
 				ret.append('Inserted row (#%d) %s' % (row_idx + 1, getlink('Attendance',
@@ -209,6 +212,6 @@ def make_child_entry(att_id,dict1,worked_hours):
 	worked_hours=cint(worked_hours) + cint(diff.seconds/60)
 	#frappe.errprint(worked_hours)
 	prt = frappe.get_doc('Attendance', att_id)
-	total_hours=((cint(prt.total_hours)*60)+cint(worked_hours))/60
+	total_hours=((flt(prt.total_hours)*60)+flt(worked_hours))/60
 	frappe.db.sql("""update `tabAttendance` set total_hours='%s' where name='%s'"""%(total_hours,att_id))
 	frappe.db.commit()
