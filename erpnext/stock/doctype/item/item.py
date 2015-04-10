@@ -9,7 +9,7 @@ from frappe.website.website_generator import WebsiteGenerator
 from erpnext.setup.doctype.item_group.item_group import invalidate_cache_for, get_parent_item_groups
 from frappe.website.render import clear_cache
 from frappe.website.doctype.website_slideshow.website_slideshow import get_slideshow
-from digitales.digitales.custom_methods import check_uom_conversion
+from digitales.digitales.Api_methods import check_uom_conversion
 
 class WarehouseNotSet(frappe.ValidationError): pass
 
