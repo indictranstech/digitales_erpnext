@@ -32,7 +32,7 @@ class DigitalesSalaryManager(Document):
 		# 	where t1.docstatus!=2 and t2.docstatus != 2
 		# 	and t1.name = t2.employee and t1.digitales_salary_structure='Yes'
 		# %s """% cond,debug=1)
-		frappe.errprint(emp_list)
+		#frappe.errprint(emp_list)
 		return emp_list
 
 

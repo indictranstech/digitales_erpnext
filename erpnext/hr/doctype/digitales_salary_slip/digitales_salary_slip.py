@@ -31,7 +31,7 @@ class DigitalesSalarySlip(Document):
 		#frappe.errprint("in get salary slip")
 		salary_slip=frappe.db.sql("""select name from `tabDigitales Salary Slip` where employee='%s'
 				and to_date>'%s' and docstatus=0 or docstatus=1"""%(self.employee,from_date))
-		frappe.errprint(salary_slip)
+		#frappe.errprint(salary_slip)
 
 		if salary_slip:
 			dates=frappe.db.sql("""select from_date,to_date from `tabDigitales Salary Slip`

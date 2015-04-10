@@ -78,10 +78,10 @@ class SalesOrder(SellingController):
 		super(SalesOrder, self).validate_order_type()
 
 	def validate_delivery_date(self):
-		if self.order_type == 'Sales' and not self.delivery_date:
+		if not self.delivery_date:
 			frappe.throw(_("Please enter 'Expected Delivery Date'"))
 
-		self.validate_sales_mntc_quotation()
+		#self.validate_sales_mntc_quotation()
 
 	def validate_proj_cust(self):
 		if self.project_name and self.customer_name:
@@ -95,6 +95,7 @@ class SalesOrder(SellingController):
 		super(SalesOrder, self).validate()
 
 		#self.validate_order_type()
+		self.set_delivery_date()
 		self.validate_delivery_date()
 		self.validate_mandatory()
 		self.validate_proj_cust()
@@ -102,7 +103,8 @@ class SalesOrder(SellingController):
 		self.validate_uom_is_integer("stock_uom", "qty")
 		# self.validate_for_items()
 		self.validate_warehouse()
-
+		#frappe.errprint("in validate")
+		
 		from erpnext.stock.doctype.packed_item.packed_item import make_packing_list
 		make_packing_list(self,'sales_order_details')
 
@@ -117,6 +119,14 @@ class SalesOrder(SellingController):
 
 		if not self.billing_status: self.billing_status = 'Not Billed'
 		if not self.delivery_status: self.delivery_status = 'Not Delivered'
+
+
+	def set_delivery_date(self):
+		#frappe.errprint("in set delivery date")
+		from datetime import date
+		from dateutil.relativedelta import relativedelta
+		if not self.delivery_date:
+			self.delivery_date = date.today() + relativedelta(days=+6)
 
 	def validate_warehouse(self):
 		from erpnext.stock.utils import validate_warehouse_company
@@ -329,6 +339,7 @@ def make_delivery_note(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
+	#frappe.errprint("1 make sales invoice")
 	def postprocess(source, target):
 
 		set_missing_values(source, target)
@@ -336,12 +347,14 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.get_advances()
 		# To get process details against sales order for which you are generating sales invoice---------
 		if source.doctype=='Sales Order':
+			#frappe.errprint("2 doctype is sales order")
 			get_shelf_service_details(source,source_name,target)
 			set_missing_values(source, target)
 			target.get_advances()
 			#update_item(source,target,source_parent)
 
 	def get_shelf_service_details(source,source_name,target):
+		#frappe.errprint("3 get shelf ready services")
 		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
 				and docstatus=1 and sales_invoice_status='Not Done'"""%source_name,as_list=1)
 		if process:
@@ -361,8 +374,10 @@ def make_sales_invoice(source_name, target_doc=None):
 		frappe.db.commit()
 
 	def create_sales_invoice_item_entry(name,target):
-		service_details=frappe.db.sql("""select s.process,s.qty,s.file_name from `tabShelf Ready Service Details` s 
+		#frappe.errprint("4 create sales invoice item entry")
+		service_details=frappe.db.sql("""select s.process,ifnull(s.qty,0),s.file_name from `tabShelf Ready Service Details` s 
 			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
+		#frappe.errprint(service_details)
 		if service_details:
 			
 			for i in service_details:
@@ -375,7 +390,10 @@ def make_sales_invoice(source_name, target_doc=None):
 				#si.rate=i[2]
 				#si.amount=i[3]
 				#si.shelf_ready_service_name=i[0]
-				si.marcfile_name=i[2]
+				if i[2]!=None:
+					si.marcfile_name=i[2]
+				else:
+					si.marcfile_name=""
 				si.sales_order=source_name
 				#si.income_account='Sales - D'
 				#si.cost_center='Main - D'
