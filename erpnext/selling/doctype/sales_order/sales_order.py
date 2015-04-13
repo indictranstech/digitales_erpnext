@@ -354,7 +354,7 @@ def make_sales_invoice(source_name, target_doc=None):
 			#update_item(source,target,source_parent)
 
 	def get_shelf_service_details(source,source_name,target):
-		#frappe.errprint("3 get shelf ready services")
+		frappe.errprint("3 get shelf ready services")
 		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
 				and docstatus=1 and sales_invoice_status='Not Done'"""%source_name,as_list=1)
 		if process:
@@ -377,11 +377,12 @@ def make_sales_invoice(source_name, target_doc=None):
 		#frappe.errprint("4 create sales invoice item entry")
 		service_details=frappe.db.sql("""select s.process,ifnull(s.qty,0),s.file_name from `tabShelf Ready Service Details` s 
 			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
-		#frappe.errprint(service_details)
+		frappe.errprint(service_details)
+		frappe.errprint(target)
 		if service_details:
 			
 			for i in service_details:
-				# frappe.errprint(i)
+				frappe.errprint(i)
 				si = target.append('entries', {})
 				si.item_code=i[0]
 				si.item_name=i[0]
