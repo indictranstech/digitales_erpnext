@@ -381,7 +381,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		if service_details:
 			
 			for i in service_details:
-				#frappe.errprint(target)
+				# frappe.errprint(i)
 				si = target.append('entries', {})
 				si.item_code=i[0]
 				si.item_name=i[0]
