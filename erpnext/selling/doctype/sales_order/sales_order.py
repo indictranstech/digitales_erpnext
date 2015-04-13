@@ -339,7 +339,6 @@ def make_delivery_note(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
-	#frappe.errprint("1 make sales invoice")
 	def postprocess(source, target):
 
 		set_missing_values(source, target)
@@ -354,7 +353,6 @@ def make_sales_invoice(source_name, target_doc=None):
 			#update_item(source,target,source_parent)
 
 	def get_shelf_service_details(source,source_name,target):
-		frappe.errprint("3 get shelf ready services")
 		process=frappe.db.sql(""" select name from `tabProcess` where get_sales_order='%s'
 				and docstatus=1 and sales_invoice_status='Not Done'"""%source_name,as_list=1)
 		if process:
