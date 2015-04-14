@@ -178,9 +178,6 @@ class SalesOrder(SellingController):
 		contract_dates=frappe.db.sql("""select contract_start_date,contract_end_date
 										from `tabCustomer Contract Form` where Customer='%s'
 											 """%customer,as_list=1)
-		# frappe.errprint(contract_dates[0][0])
-		# frappe.errprint(contract_dates[0][1])
-		# frappe.errprint(self.transaction_date)
 		if contract_dates:
 
 			if contract_dates[0][0] <= self.transaction_date <= contract_dates[0][1] :
