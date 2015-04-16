@@ -112,7 +112,8 @@ erpnext.selling.SellingController = erpnext.TransactionController.extend({
 	},
 
 	customer_address: function() {
-		erpnext.utils.get_address_display(this.frm, "customer_address");
+		// erpnext.utils.get_address_display(this.frm, "customer_address");
+		erpnext.utils.get_address_display(this.frm, "customer_address","bill_to_address");
 	},
 
 	shipping_address_name: function() {
