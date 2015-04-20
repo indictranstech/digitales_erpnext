@@ -52,7 +52,7 @@
 					actual_qty = (doc.doctype==="Sales Order"
 						? doc.projected_qty : doc.actual_qty);
 				if(actual_qty != undefined) {
-					if(actual_qty > doc.qty) {
+					if(actual_qty >= doc.qty) {
 						var label_class = "label-success";
 						var title = "In Stock"
 					} else {
