@@ -262,3 +262,22 @@ cur_frm.cscript.priority = function(doc, cdt, cdn){
 	}
 	refresh_field('amount');
 }
+
+
+cur_frm.fields_dict.billing_address_name.get_query=function(doc,cdt,cdn){
+	return{
+		filters: {
+			'customer':doc.customer,
+			'address_type':'Billing'
+		}
+	}
+}
+
+cur_frm.cscript.shipping_address_name.get_query=function(doc,cdt,cdn){
+	return{
+		filters: {
+			'customer':doc.customer,
+			'address_type':'Shipping'
+		}
+	}
+}
