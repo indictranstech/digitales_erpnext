@@ -58,11 +58,17 @@ WHERE
 
 def get_item_conditions(filters):
 	conditions = []
+	if filters.get("customer"):
+		conditions.append("a.customer='%(customer)s'"%filters)
+	if filters.get("from_date"):
+		conditions.append("a.posting_date>='%(from_date)s'"%filters)
+	if filters.get("to_date"):
+		conditions.append("a.posting_date<='%(to_date)s'"%filters)
 	if filters.get("budget"):
 		conditions.append("a.budget='%(budget)s'"%filters)
 	if filters.get("new_order_type"):
 		conditions.append("new_order_type='%(new_order_type)s'"%filters)
-	if filters.get("service_type"):
-		conditions.append("service_type='%(service_type)s'"%filters)
+	if filters.get("item_group"):
+		conditions.append("b.item_group='%(item_group)s'"%filters)
 
 	return " and "+" and ".join(conditions) if conditions else ""
