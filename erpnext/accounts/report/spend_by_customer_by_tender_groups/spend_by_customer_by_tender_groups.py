@@ -20,11 +20,11 @@ def execute(filters=None):
 
 
 def get_columns():
-	return [_("Customer") + ":Link/Customer:200",_("Tender Group") + ":Link/Tender Group:200", _("Monthly Spend") + ":Currency:200"]
+	return [_("Customer") + ":Link/Customer:200",_("Tender Group") + ":Link/Tender Group:200", _("Monthly Spend") + ":Currency:200",_("Subtotal") + ":Currency:200"]
 	
 def get_sales_invoice_details(filters):
-	return frappe.db.sql(""" select customer,tender_group, grand_total_export from `tabSales Invoice`
-							where posting_date between %(from_date)s and %(to_date)s {sle_conditions} """\
+	return frappe.db.sql(""" select customer,tender_group, grand_total_export, net_total from `tabSales Invoice`
+							where docstatus=1 and posting_date between %(from_date)s and %(to_date)s {sle_conditions} """\
 							.format(sle_conditions=get_item_conditions(filters)), filters, as_list=1,debug=1)
 
 def get_item_conditions(filters):

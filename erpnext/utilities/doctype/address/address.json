@@ -199,7 +199,7 @@
  "icon": "icon-map-marker", 
  "idx": 1, 
  "in_dialog": 0, 
- "modified": "2015-04-23 20:17:31.210404", 
+ "modified": "2015-05-02 15:05:04.280691", 
  "modified_by": "Administrator", 
  "module": "Utilities", 
  "name": "Address", 
@@ -273,6 +273,14 @@
    "report": 1, 
    "role": "Accounts User", 
    "submit": 0, 
+   "write": 1
+  }, 
+  {
+   "create": 1, 
+   "delete": 1, 
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Administrator", 
    "write": 1
   }
  ], 
