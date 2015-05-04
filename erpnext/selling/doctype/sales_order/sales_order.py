@@ -393,6 +393,13 @@ def make_sales_invoice(source_name, target_doc=None):
 
 	def set_missing_values(source, target):
 		target.is_pos = 0
+		target.is_recurring = 1
+		target.recurring_type  =  source.recurring_type
+		target.from_date  = source.from_date
+		target.to_date = source.to_date
+		target.repeat_on_day_of_month = source.repeat_on_day_of_month
+		target.end_date = source.end_date
+		target.notification_email_address = source.notification_email_address
 		target.ignore_pricing_rule = 1
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")

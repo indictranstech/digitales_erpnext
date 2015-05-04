@@ -224,17 +224,6 @@ cur_frm.cscript.customer = function(doc, cdt, cdn){
 	refresh_field('amount');
 }
 
-// cur_frm.cscript.budget = function(doc,cdt,cdn){
-// 	console.log("in budget")
-// 	console.log(doc.customer)
-// 	if(doc.customer){
-// 		console.log(doc.customer)
-// 		cust_name=doc.customer
-// 		get_server_fields('get_budget_details', '' , doc.customer, doc, cdt, cdn, 1);
-
-// 	}
-// }
-
 cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
 	if (doc.customer){
  		{
