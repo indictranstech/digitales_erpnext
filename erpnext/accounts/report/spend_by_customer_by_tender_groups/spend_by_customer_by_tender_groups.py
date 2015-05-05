@@ -39,5 +39,7 @@ def get_item_conditions(filters):
 		conditions.append("tender_group='%(tender_group)s'"%filters)
 	if filters.get("customer"):
 		conditions.append("customer='%(customer)s'"%filters)
+	if filters.get("fiscal_year"):
+		conditions.append("fiscal_year='%(fiscal_year)s'"%filters)
 
 	return " and {}".format(" and ".join(conditions)) if conditions else ""

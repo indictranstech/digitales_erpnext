@@ -3,7 +3,13 @@
 
 frappe.query_reports["Spend By Customer By Tender Groups"] = {
 	"filters": [
-
+		{
+			"fieldname":"fiscal_year",
+			"label": __("Fiscal Year"),
+			"fieldtype": "Link",
+			"default": sys_defaults.fiscal_year,
+			"options": "Fiscal Year"
+		},
 		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
@@ -32,6 +38,5 @@ frappe.query_reports["Spend By Customer By Tender Groups"] = {
 			"fieldtype": "Link",
 			"options": "Customer"
 		}
-		
 	]
 }
