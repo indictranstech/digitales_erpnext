@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 import frappe.utils
-from frappe.utils import cstr, flt, getdate, comma_and
+from frappe.utils import cstr, flt, getdate, comma_and, cint
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 
@@ -393,16 +393,17 @@ def make_sales_invoice(source_name, target_doc=None):
 
 	def set_missing_values(source, target):
 		target.is_pos = 0
-		target.is_recurring = 1
-		target.recurring_type  =  source.recurring_type
-		target.from_date  = source.from_date
-		target.to_date = source.to_date
-		target.repeat_on_day_of_month = source.repeat_on_day_of_month
-		target.end_date = source.end_date
-		target.notification_email_address = source.notification_email_address
 		target.ignore_pricing_rule = 1
 		target.run_method("set_missing_values")
 		target.run_method("calculate_taxes_and_totals")
+		if cint(source.is_recurring) == 1:
+			target.is_recurring = source.is_recurring
+			target.recurring_type  =  source.recurring_type
+			target.from_date  = source.from_date
+			target.to_date = source.to_date
+			target.repeat_on_day_of_month = source.repeat_on_day_of_month
+			target.end_date = source.end_date
+			target.notification_email_address = source.notification_email_address
 
 	def update_item(source, target, source_parent):
 		target.amount = flt(source.amount) - flt(source.billed_amt)
