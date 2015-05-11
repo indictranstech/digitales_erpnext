@@ -32,28 +32,28 @@ def get_sales_invoice_details(filters):
 		foo.description,foo.quantity,foo.budget,foo.order_type,
 		foo.price,foo.amount,foo.monthly_spend,foo.invoice_number,foo.posting_date,
 		sum(case when month(posting_date)=month(now()) then foo.amount else 0 end) as month_sum,sum(foo.amount) as year_sum 
-from(
-SELECT
-    a.customer_name as customer_name,
-    b.item_code as item_code,
-    b.item_name as item_name,
-    b.item_group as item_group,
-    b.description as description,
-    b.qty as quantity,
-    a.budget as budget,
-    a.new_order_type as order_type,
-    b.rate as price,
-    b.amount as amount,
-    b.amount as monthly_spend,
-    a.name as invoice_number,
-    a.posting_date as posting_date 
-FROM
-    `tabSales Invoice` a,
-    `tabSales Invoice Item` b
-WHERE
-    b.parent = a.name
-    %s
-) as foo group by foo.customer_name, foo.item_code"""%get_item_conditions(filters),as_list=1)
+		from(
+		SELECT
+		    a.customer_name as customer_name,
+		    b.item_code as item_code,
+		    b.item_name as item_name,
+		    b.item_group as item_group,
+		    b.description as description,
+		    b.qty as quantity,
+		    a.budget as budget,
+		    a.new_order_type as order_type,
+		    b.rate as price,
+		    b.amount as amount,
+		    b.amount as monthly_spend,
+		    a.name as invoice_number,
+		    a.posting_date as posting_date 
+		FROM
+		    `tabSales Invoice` a,
+		    `tabSales Invoice Item` b
+		WHERE
+		    b.parent = a.name
+		    %s
+		) as foo group by foo.customer_name, foo.item_code"""%get_item_conditions(filters),as_list=1)
 			
 
 def get_item_conditions(filters):
