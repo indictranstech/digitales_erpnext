@@ -28,7 +28,7 @@ def get_sales_invoice_details(filters):
 	# 						.format(sle_conditions=get_item_conditions(filters)), filters, as_list=1,debug=1)
 
 	return frappe.db.sql(""" select customer,tender_group, grand_total_export, net_total_export - 
-							(select sum(tax_amount) from `tabSales Taxes and Charges` where account_head='2-4100 GST Net Liability - D' and included_in_print_rate=1 and parent=t1.name) 
+							(select COALESCE(sum(tax_amount),0) from `tabSales Taxes and Charges` where account_head='2-4100 GST Net Liability - D' and included_in_print_rate=1 and parent=t1.name) 
 							from `tabSales Invoice` as t1 where docstatus=1 and posting_date between %(from_date)s and %(to_date)s {sle_conditions} """\
 							.format(sle_conditions=get_item_conditions(filters)), filters, as_list=1)
 

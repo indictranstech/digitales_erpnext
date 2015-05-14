@@ -13,12 +13,14 @@ frappe.query_reports["Spend By Item By Customer"] = {
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
+			"default": frappe.datetime.get_today(),
 			"options": "From Date"
 		},
 		{
 			"fieldname":"to_date",
 			"label": __("To Date"),
 			"fieldtype": "Date",
+			"default": frappe.datetime.get_today(),
 			"options": "To Date"
 		},
 		{
