@@ -6,12 +6,12 @@
  "docstatus": 0, 
  "doctype": "Report", 
  "is_standard": "Yes", 
- "modified": "2015-05-08 19:53:56.299836", 
+ "modified": "2015-05-15 17:50:07.423287", 
  "modified_by": "Administrator", 
  "module": "Accounts", 
  "name": "Spend By Item By Customer", 
  "owner": "Administrator", 
  "ref_doctype": "Sales Invoice", 
  "report_name": "Spend By Item By Customer", 
- "report_type": "Query Report"
+ "report_type": "Script Report"
 }
