@@ -198,6 +198,7 @@ cur_frm.cscript.on_submit = function(doc, cdt, cdn) {
 	if(cint(frappe.boot.notification_settings.sales_order)) {
 		cur_frm.email_doc(frappe.boot.notification_settings.sales_order_message);
 	}
+	cur_frm.reload_doc()
 };
 
 cur_frm.cscript.send_sms = function() {
@@ -270,3 +271,6 @@ cur_frm.cscript.shipping_address_name.get_query=function(doc,cdt,cdn){
 		}
 	}
 }
+
+{% include 'digitales/custom_js_methods.js' %}
+$.extend(cur_frm.cscript, new erpnext.selling.CustomSalesOrder());
