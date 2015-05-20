@@ -21,6 +21,10 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 	refresh: function(doc, dt, dn) {
 		this._super();
 		this.frm.dashboard.reset();
+		if(!doc.delivery_date){ //Newly added
+			doc.delivery_date = doc.transaction_date
+			refresh_field('delivery_date')
+		}
 
 		if(doc.docstatus==1) {
 			if(doc.status != 'Stopped') {
