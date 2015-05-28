@@ -304,6 +304,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.qty) - flt(source.delivered_qty)
+		target.assigned_qty = source.assigned_qty
 
 	target_doc = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
