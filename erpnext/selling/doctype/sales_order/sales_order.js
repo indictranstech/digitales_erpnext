@@ -11,7 +11,7 @@ cur_frm.cscript.sales_team_fname = "sales_team";
 cur_frm.add_fetch('item_code','product_release_date','release_date_of_item');
 cur_frm.add_fetch('customer','customer_group','customer_group');
 cur_frm.add_fetch('customer','territory','territory');
-cur_frm.add_fetch('customer','tender_group','tender_group');
+// cur_frm.add_fetch('customer','tender_group','tender_group');
 
 {% include 'selling/sales_common.js' %}
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
@@ -28,6 +28,7 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 
 		if(doc.docstatus==1) {
 			if(doc.status != 'Stopped') {
+
 
 				cur_frm.dashboard.add_progress(cint(doc.per_delivered) + __("% Delivered"),
 					doc.per_delivered);
@@ -99,6 +100,21 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 		this.get_terms();
 	},
 
+	customer: function(){
+		return frappe.call({
+			method: "erpnext.selling.doctype.customer.customer.get_contract_details",
+			args: {
+				"customer": cur_frm.doc.customer
+			},
+			callback: function(r) {
+				if(r.message){
+					cur_frm.doc.tender_group = r.message.tender_group;
+					cur_frm.refresh_fields();
+				}
+			}
+		});
+	},
+
 	warehouse: function(doc, cdt, cdn) {
 		var item = frappe.get_doc(cdt, cdn);
 		if(item.item_code && item.warehouse) {
@@ -121,12 +137,13 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 	},
 
 	make_delivery_note: function() {
+
 		frappe.model.open_mapped_doc({
 			method: "erpnext.selling.doctype.sales_order.sales_order.make_delivery_note",
 			frm: cur_frm
 		})
 	},
-
+	
 	make_sales_invoice: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.selling.doctype.sales_order.sales_order.make_sales_invoice",
@@ -158,6 +175,7 @@ cur_frm.cscript.new_contact = function(){
 	if(doc.customer) locals['Contact'][tn].customer = doc.customer;
 	loaddoc('Contact', tn);
 }
+
 
 cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
 	return {
@@ -274,6 +292,11 @@ cur_frm.cscript.shipping_address_name.get_query=function(doc,cdt,cdn){
 			'address_type':'Shipping'
 		}
 	}
+}
+
+cur_frm.cscript.sales_person = function(doc,cdt, cdn){
+	d = locals[cdt][cdn].allocated_percentage = 100;
+	cur_frm.refresh_field("sales_team");
 }
 
 {% include 'digitales/custom_js_methods.js' %}

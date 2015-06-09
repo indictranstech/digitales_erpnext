@@ -105,7 +105,21 @@ cur_frm.fields_dict['default_price_list'].get_query = function(doc, cdt, cdn) {
 
 
 cur_frm.fields_dict['shelf_ready_services_details'].grid.get_field('name1').get_query = function(doc, cdt, cdn) {
-
    	return {filters: { is_service_item: "Yes"}}
+}
 
+cur_frm.cscript.is_active = function(doc, cdt, cdn){
+	// check all the item and raise error if is_active is selected
+	doc_name = locals[cdt][cdn].name
+	doc_active = locals[cdt][cdn].is_active
+
+	if(doc_active == 1){
+		for (var i = doc.contract_details.length - 1; i >= 0; i--) {
+			if(doc.contract_details[i].name != doc_name && doc.contract_details[i].is_active == 1){
+				msgprint("Record with Contract No : " + doc.contract_details[i].contract_no + " is already active, only one active contract is allowed");
+				locals[cdt][doc_name].is_active = 0;
+				cur_frm.refresh_field("contract_details");
+			}
+		};
+	}
 }

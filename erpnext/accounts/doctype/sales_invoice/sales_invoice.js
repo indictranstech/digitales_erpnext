@@ -13,10 +13,6 @@ cur_frm.pformat.print_heading = 'Invoice';
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}
 
-
-cur_frm.add_fetch('customer','tender_group','tender_group');
-
-
 frappe.provide("erpnext.accounts");
 erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.extend({
 	onload: function() {
@@ -44,6 +40,23 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 			locals.DocType[cur_frm.doctype].default_print_format = "POS Invoice";
 			cur_frm.setup_print_layout();
 		}
+
+		/*
+			set PO No, Budget and Order Type from Sales Order
+			Terms in SINV form to pick ""Net 30"" by default for all SINVs
+		*/
+		if(cur_frm.doc.entries && cur_frm.doc.entries[0].sales_order){
+			frappe.model.with_doc('Sales Order', cur_frm.doc.entries[0].sales_order, function() {
+				so = frappe.get_doc("Sales Order", cur_frm.doc.entries[0].sales_order);
+				cur_frm.doc.po_no = so.po_no;
+				cur_frm.doc.new_order_type = so.new_order_type;
+				cur_frm.budget = so.budget;
+			});
+			cur_frm.refresh_field(["po_no","order_type","budget"]);
+		}
+		set_contract_details(cur_frm.doc.customer);
+		cur_frm.doc.tc_name = "Net 30";
+		cur_frm.refresh_fields();
 	},
 
 	refresh: function(doc, dt, dn) {
@@ -176,6 +189,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 			}, function() {
 			me.apply_pricing_rule();
 		})
+		set_contract_details(cur_frm.doc.customer);
 	},
 
 	debit_to: function() {
@@ -419,4 +433,23 @@ cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
  	}
  	else
  		msgprint("First select the customer")
+}
+
+set_contract_details = function(customer){
+	// set the tender group and contract number from customer contract details
+	if(customer){
+		return frappe.call({
+			method: "erpnext.selling.doctype.customer.customer.get_contract_details",
+			args: {
+				"customer": customer
+			},
+			callback: function(r) {
+				if(r.message){
+					cur_frm.doc.contract_number = r.message.contract_no;
+					cur_frm.doc.tender_group = r.message.tender_group;
+					cur_frm.refresh_fields();
+				}
+			}
+		});
+	}
 }

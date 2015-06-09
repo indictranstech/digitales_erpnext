@@ -43,7 +43,7 @@ class DeliveryNote(SellingController):
 		if billed_qty:
 			total_qty = sum((item.qty for item in self.get("delivery_note_details")))
 			self.get("__onload").billing_complete = (billed_qty[0][0] == total_qty)
-
+	
 	def before_print(self):
 		def toggle_print_hide(meta, fieldname):
 			df = meta.get_field(fieldname)

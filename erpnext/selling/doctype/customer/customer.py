@@ -171,6 +171,23 @@ def get_dashboard_info(customer):
 
 	return out
 
+@frappe.whitelist()
+def get_contract_details(customer):
+	"""
+		Get the contract number and tender group
+	"""
+	contract_detail = {
+		"contract_no":"",
+		"tender_group":""
+	}
+	contract_details = frappe.db.sql("""SELECT contract_no,tender_group FROM `tabContract Details` WHERE parent='%s' AND is_active=1"""%(customer), as_dict=True)
+	for details in contract_details:
+		contract_detail.update({
+			"contract_no":details.contract_no,
+			"tender_group":details.tender_group			
+		})
+
+	return contract_detail
 
 def get_customer_list(doctype, txt, searchfield, start, page_len, filters):
 	if frappe.db.get_default("cust_master_name") == "Customer Name":

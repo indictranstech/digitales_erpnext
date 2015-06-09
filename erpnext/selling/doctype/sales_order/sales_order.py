@@ -293,6 +293,50 @@ def make_material_request(source_name, target_doc=None):
 
 	return doc
 
+# @frappe.whitelist()
+# def make_delivery_note(source_name, target_doc=None):
+# 	def set_missing_values(source, target):
+# 		target.ignore_pricing_rule = 1
+# 		target.run_method("set_missing_values")
+# 		target.run_method("calculate_taxes_and_totals")
+
+# 	def update_item(source, target, source_parent):
+# 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
+# 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
+# 		# target.qty = flt(source.qty) - flt(source.delivered_qty)
+# 		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty)
+# 		target.assigned_qty = source.assigned_qty
+
+# 	target_doc = get_mapped_doc("Sales Order", source_name, {
+# 		"Sales Order": {
+# 			"doctype": "Delivery Note",
+# 			"validation": {
+# 				"docstatus": ["=", 1]
+# 			}
+# 		},
+# 		"Sales Order Item": {
+# 			"doctype": "Delivery Note Item",
+# 			"field_map": {
+# 				"rate": "rate",
+# 				"name": "prevdoc_detail_docname",
+# 				"parent": "against_sales_order",
+# 			},
+# 			"postprocess": update_item,
+# 			"condition": lambda doc: doc.delivered_qty < doc.qty
+# 		},
+# 		"Sales Taxes and Charges": {
+# 			"doctype": "Sales Taxes and Charges",
+# 			"add_if_empty": True
+# 		},
+# 		"Sales Team": {
+# 			"doctype": "Sales Team",
+# 			"add_if_empty": True
+# 		}
+# 	}, target_doc, set_missing_values)
+
+# 	return target_doc
+
+# by pitambar
 @frappe.whitelist()
 def make_delivery_note(source_name, target_doc=None):
 	def set_missing_values(source, target):
@@ -303,8 +347,9 @@ def make_delivery_note(source_name, target_doc=None):
 	def update_item(source, target, source_parent):
 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
-		target.qty = flt(source.qty) - flt(source.delivered_qty)
+		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
+
 
 	target_doc = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
@@ -321,7 +366,7 @@ def make_delivery_note(source_name, target_doc=None):
 				"parent": "against_sales_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: doc.delivered_qty < doc.qty
+			"condition": lambda doc: ((doc.assigned_qty-doc.delivered_qty) != 0.0) if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' else doc.delivered_qty < doc.qty
 		},
 		"Sales Taxes and Charges": {
 			"doctype": "Sales Taxes and Charges",
@@ -332,8 +377,10 @@ def make_delivery_note(source_name, target_doc=None):
 			"add_if_empty": True
 		}
 	}, target_doc, set_missing_values)
+	
 
 	return target_doc
+
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
