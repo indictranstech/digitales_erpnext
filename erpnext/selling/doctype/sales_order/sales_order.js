@@ -55,6 +55,17 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 					cur_frm.add_custom_button(__('Stop'), cur_frm.cscript['Stop Sales Order'],
 						"icon-exclamation", "btn-default")
 
+
+
+
+				//added by pitambar
+				// if(flt(doc.per_delivered, 2) < 100 || doc.per_billed < 100)
+				// 	cur_frm.add_custom_button(__('Stop Item'), cur_frm.cscript['Stop Sales Order Item'],
+				// 		"icon-exclamation", "btn-default")
+
+
+
+
 						// maintenance
 						if(flt(doc.per_delivered, 2) < 100 && ["Sales", "Shopping Cart"].indexOf(doc.order_type)===-1) {
 							cur_frm.add_custom_button(__('Make Maint. Visit'),
@@ -129,6 +140,7 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 		}
 	},
 
+	
 	make_material_request: function() {
 		frappe.model.open_mapped_doc({
 			method: "erpnext.selling.doctype.sales_order.sales_order.make_material_request",
@@ -188,7 +200,6 @@ cur_frm.fields_dict['project_name'].get_query = function(doc, cdt, cdn) {
 
 cur_frm.cscript['Stop Sales Order'] = function() {
 	var doc = cur_frm.doc;
-
 	var check = confirm(__("Are you sure you want to STOP ") + doc.name);
 
 	if (check) {
@@ -200,6 +211,8 @@ cur_frm.cscript['Stop Sales Order'] = function() {
 		});
 	}
 }
+
+
 
 cur_frm.cscript['Unstop Sales Order'] = function() {
 	var doc = cur_frm.doc;
@@ -232,7 +245,6 @@ cur_frm.cscript.send_sms = function() {
 cur_frm.cscript.customer = function(doc, cdt, cdn){
 	//var d = locals[cdt][cdn];
 	if (doc.customer){
-		//console.log(doc.transaction_date)
 		var someDate = new Date();
 		var numberOfDaysToAdd = 6;
 		someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
@@ -240,7 +252,6 @@ cur_frm.cscript.customer = function(doc, cdt, cdn){
 		var mm = someDate.getMonth() + 1;
 		var y = someDate.getFullYear();
 		var someFormattedDate = y + '-'+ mm + '-'+ dd;
-		//console.log(someFormattedDate)
 		cur_frm.set_value('delivery_date',someFormattedDate)
 		refresh_field('delivery_date')
 	}
@@ -259,8 +270,8 @@ cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
 }
 cur_frm.cscript.priority = function(doc, cdt, cdn){
 	//var d = locals[cdt][cdn];
+
 	if (doc.priority){
-		//console.log(doc.transaction_date)
 		var someDate = new Date();
 		var numberOfDaysToAdd = 6;
 		someDate.setDate(someDate.getDate() + numberOfDaysToAdd); 
@@ -268,7 +279,6 @@ cur_frm.cscript.priority = function(doc, cdt, cdn){
 		var mm = someDate.getMonth() + 1;
 		var y = someDate.getFullYear();
 		var someFormattedDate = y + '-'+ mm + '-'+ dd;
-		//console.log(someFormattedDate)
 		cur_frm.set_value('delivery_date',someFormattedDate)
 		refresh_field('delivery_date')
 	}
@@ -301,3 +311,9 @@ cur_frm.cscript.sales_person = function(doc,cdt, cdn){
 
 {% include 'digitales/custom_js_methods.js' %}
 $.extend(cur_frm.cscript, new erpnext.selling.CustomSalesOrder());
+
+
+
+
+
+

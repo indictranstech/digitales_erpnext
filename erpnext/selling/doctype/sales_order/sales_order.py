@@ -7,6 +7,7 @@ import frappe.utils
 from frappe.utils import cstr, flt, getdate, comma_and, cint
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+import json
 
 from erpnext.controllers.selling_controller import SellingController
 
@@ -269,7 +270,6 @@ class SalesOrder(SellingController):
 	def get_portal_page(self):
 		return "order" if self.docstatus==1 else None
 
-
 @frappe.whitelist()
 def make_material_request(source_name, target_doc=None):
 	def postprocess(source, doc):
@@ -350,7 +350,6 @@ def make_delivery_note(source_name, target_doc=None):
 		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
 
-
 	target_doc = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
 			"doctype": "Delivery Note",
@@ -366,7 +365,7 @@ def make_delivery_note(source_name, target_doc=None):
 				"parent": "against_sales_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: ((doc.assigned_qty-doc.delivered_qty) != 0.0) if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' else doc.delivered_qty < doc.qty
+			"condition": lambda doc: (((doc.assigned_qty-doc.delivered_qty) != 0.0) and doc.stop_status!="Yes") if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' else ((doc.delivered_qty < doc.qty) and doc.stop_status!="Yes")
 		},
 		"Sales Taxes and Charges": {
 			"doctype": "Sales Taxes and Charges",
@@ -377,10 +376,8 @@ def make_delivery_note(source_name, target_doc=None):
 			"add_if_empty": True
 		}
 	}, target_doc, set_missing_values)
-	
 
 	return target_doc
-
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
@@ -474,7 +471,7 @@ def make_sales_invoice(source_name, target_doc=None):
 				"parent": "sales_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: doc.base_amount==0 or doc.billed_amt < doc.amount
+			"condition": lambda doc: (doc.base_amount==0 or doc.billed_amt < doc.amount) and doc.stop_status!="Yes"
 		},
 		"Sales Taxes and Charges": {
 			"doctype": "Sales Taxes and Charges",

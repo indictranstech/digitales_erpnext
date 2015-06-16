@@ -30,6 +30,8 @@ class BankReconciliation(Document):
 
 		self.set('entries', [])
 		self.total_amount = 0.0
+		self.total_debit = 0.0
+		self.total_credit = 0.0
 
 		for d in dl:
 			nl = self.append('entries', {})
@@ -42,6 +44,8 @@ class BankReconciliation(Document):
 			nl.against_account = d.against_account
 			nl.clearance_date = d.clearance_date
 			self.total_amount += flt(d.debit) - flt(d.credit)
+			self.total_debit+=flt(d.debit)
+			self.total_credit+=flt(d.credit)
 
 	def update_details(self):
 		vouchers = []

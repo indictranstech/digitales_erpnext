@@ -120,13 +120,14 @@
  ], 
  "icon": "icon-shield", 
  "idx": 1, 
- "modified": "2014-05-07 06:39:38.981478", 
+ "modified": "2015-06-11 19:54:09.588608", 
  "modified_by": "Administrator", 
  "module": "Setup", 
  "name": "Authorization Rule", 
  "owner": "Administrator", 
  "permissions": [
   {
+   "apply_user_permissions": 0, 
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
