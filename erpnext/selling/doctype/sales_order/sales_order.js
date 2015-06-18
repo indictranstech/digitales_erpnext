@@ -51,7 +51,7 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 				}
 
 				// stop
-				if(flt(doc.per_delivered, 2) < 100 || doc.per_billed < 100)
+				if(flt(doc.per_delivered, 2) < 100 || flt(doc.per_billed,2) < 100)
 					cur_frm.add_custom_button(__('Stop'), cur_frm.cscript['Stop Sales Order'],
 						"icon-exclamation", "btn-default")
 
