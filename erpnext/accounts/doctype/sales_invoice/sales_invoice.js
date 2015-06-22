@@ -45,7 +45,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 			set PO No, Budget and Order Type from Sales Order
 			Terms in SINV form to pick ""Net 30"" by default for all SINVs
 		*/
-		if(cur_frm.doc.entries && cur_frm.doc.entries[0].sales_order){
+		/*if(cur_frm.doc.entries && cur_frm.doc.entries[0].sales_order){
 			frappe.model.with_doc('Sales Order', cur_frm.doc.entries[0].sales_order, function() {
 				so = frappe.get_doc("Sales Order", cur_frm.doc.entries[0].sales_order);
 				cur_frm.doc.po_no = so.po_no;
@@ -55,8 +55,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 			cur_frm.refresh_field(["po_no","order_type","budget"]);
 		}
 		set_contract_details(cur_frm.doc.customer);
-		cur_frm.doc.tc_name = "Net 30";
-		cur_frm.refresh_fields();
+		cur_frm.refresh_fields();*/
 	},
 
 	refresh: function(doc, dt, dn) {
@@ -189,7 +188,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 			}, function() {
 			me.apply_pricing_rule();
 		})
-		set_contract_details(cur_frm.doc.customer);
+		// set_contract_details(cur_frm.doc.customer);
 	},
 
 	debit_to: function() {
@@ -435,7 +434,12 @@ cur_frm.get_field("budget").get_query=function(doc,cdt,cdn){
  		msgprint("First select the customer")
 }
 
-set_contract_details = function(customer){
+cur_frm.cscript.sales_person = function(doc,cdt, cdn){
+	d = locals[cdt][cdn].allocated_percentage = 100;
+	cur_frm.refresh_field("sales_team");
+}
+
+/*set_contract_details = function(customer){
 	// set the tender group and contract number from customer contract details
 	if(customer){
 		return frappe.call({
@@ -452,4 +456,4 @@ set_contract_details = function(customer){
 			}
 		});
 	}
-}
+}*/
