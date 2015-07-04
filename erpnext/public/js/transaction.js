@@ -652,7 +652,7 @@ erpnext.TransactionController = erpnext.stock.StockController.extend({
 				actual_tax_dict[tax.idx] = flt(tax.rate, precision("tax_amount", tax));
 			}
 		});
-
+		
 		$.each(this.frm.item_doclist, function(n, item) {
 			var item_tax_map = me._load_item_tax_rate(item.item_tax_rate);
 
