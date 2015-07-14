@@ -105,7 +105,7 @@ class SalesOrder(SellingController):
 		# self.validate_for_items()
 		self.validate_warehouse()
 		#frappe.errprint("in validate")
-		
+
 		from erpnext.stock.doctype.packed_item.packed_item import make_packing_list
 		make_packing_list(self,'sales_order_details')
 
@@ -349,6 +349,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
 		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
+		target.line_order_item = source.line_item
 
 	target_doc = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
@@ -414,7 +415,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		frappe.db.commit()
 
 	def create_sales_invoice_item_entry(name,target):
-		service_details=frappe.db.sql("""select s.process,ifnull(s.qty,0),s.file_name from `tabShelf Ready Service Details` s 
+		service_details=frappe.db.sql("""select s.process,ifnull(s.qty,0),s.file_name from `tabShelf Ready Service Details` s
 			inner join `tabProcess` p on s.parent=p.name where s.parent='%s' """%name,as_list=1)
 		if service_details:
 			for i in service_details:
@@ -454,8 +455,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.amount = flt(source.amount) - flt(source.billed_amt)
 		target.base_amount = target.amount * flt(source_parent.conversion_rate)
 		target.qty = target.amount / flt(source.rate) if (source.rate and source.billed_amt) else source.qty
-
-	
+		target.so_detail = source.name
 
 	doclist = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
