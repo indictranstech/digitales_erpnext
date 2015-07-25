@@ -53,6 +53,11 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Digitales Bank Reconciliation",
+					"description": _("Update bank payment dates with journals.")
+				},
+				{
+					"type": "doctype",
 					"name": "Payment Reconciliation",
 					"description": _("Match non-linked Invoices and Payments.")
 				},
