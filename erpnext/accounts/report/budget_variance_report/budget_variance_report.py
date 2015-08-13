@@ -89,7 +89,7 @@ def get_actual_details(filters):
 		where gl.fiscal_year=%s and company=%s
 		and bd.account=gl.account and bd.parent=gl.cost_center""" % ('%s', '%s'), 
 		(filters.get("fiscal_year"), filters.get("company")), as_dict=1)
-		
+
 	cc_actual_details = {}
 	for d in ac_details:
 		cc_actual_details.setdefault(d.cost_center, {}).setdefault(d.account, []).append(d)
