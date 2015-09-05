@@ -1,6 +1,8 @@
 // Copyright (c) 2013, Web Notes Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
+{% include 'digitales/add_artist.js'%}
+
 cur_frm.fields_dict['delivery_note'].get_query = function(doc, cdt, cdn) {
 	return{
 		filters:{ 'docstatus': 0}

@@ -9,6 +9,7 @@ cur_frm.cscript.sales_team_fname = "sales_team";
 // print heading
 cur_frm.pformat.print_heading = 'Invoice';
 
+{% include 'digitales/add_artist.js' %};
 {% include 'selling/sales_common.js' %};
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}

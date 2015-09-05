@@ -7,6 +7,7 @@ cur_frm.cscript.fname = "delivery_note_details";
 cur_frm.cscript.other_fname = "other_charges";
 cur_frm.cscript.sales_team_fname = "sales_team";
 
+{% include 'digitales/add_artist.js'%}
 {% include 'selling/sales_common.js' %};
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}

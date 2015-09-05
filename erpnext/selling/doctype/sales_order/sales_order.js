@@ -13,6 +13,7 @@ cur_frm.add_fetch('customer','customer_group','customer_group');
 cur_frm.add_fetch('customer','territory','territory');
 // cur_frm.add_fetch('customer','tender_group','tender_group');
 
+{% include 'digitales/add_artist.js'%}
 {% include 'selling/sales_common.js' %}
 {% include 'accounts/doctype/sales_taxes_and_charges_master/sales_taxes_and_charges_master.js' %}
 {% include 'accounts/doctype/sales_invoice/pos.js' %}

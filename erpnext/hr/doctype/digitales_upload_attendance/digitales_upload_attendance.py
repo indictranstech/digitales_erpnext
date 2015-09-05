@@ -207,10 +207,9 @@ def make_child_entry(att_id,dict1,worked_hours):
 	att.parentfield='attendance_time_sheet'
 	att.parenttype='Attendance'
 	att.hours=diff.seconds/60
-	att.docstatus=1
+	# att.docstatus=1
 	att.save(ignore_permissions=True)
 	worked_hours=cint(worked_hours) + cint(diff.seconds/60)
-	#frappe.errprint(worked_hours)
 	prt = frappe.get_doc('Attendance', att_id)
 	total_hours=((flt(prt.total_hours)*60)+flt(worked_hours))/60
 	frappe.db.sql("""update `tabAttendance` set total_hours='%s' where name='%s'"""%(total_hours,att_id))
