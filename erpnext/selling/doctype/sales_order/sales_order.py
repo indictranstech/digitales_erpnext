@@ -353,6 +353,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
 		target.line_order_item = source.line_item
+		target.artist = source.artist or frappe.db.get_value('Item', {'name':source.item_code}, 'artist')
 
 	target_doc = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {
@@ -459,6 +460,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.base_amount = target.amount * flt(source_parent.conversion_rate)
 		target.qty = target.amount / flt(source.rate) if (source.rate and source.billed_amt) else source.qty
 		target.so_detail = source.name
+		target.artist = source.artist or frappe.db.get_value('Item', {'name':source.item_code}, 'artist')
 
 	doclist = get_mapped_doc("Sales Order", source_name, {
 		"Sales Order": {

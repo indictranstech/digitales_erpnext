@@ -324,6 +324,7 @@ def make_sales_invoice(source_name, target_doc=None):
 
 	def update_item(source_doc, target_doc, source_parent):
 		target_doc.qty = source_doc.qty - invoiced_qty_map.get(source_doc.name, 0)
+		target_doc.artist = source_doc.artist or frappe.db.get_value('Item', {'name':source_doc.item_code}, 'artist')
 
 	doc = get_mapped_doc("Delivery Note", source_name, 	{
 		"Delivery Note": {

@@ -642,6 +642,7 @@ def make_delivery_note(source_name, target_doc=None):
 		target_doc.amount = (flt(source_doc.qty) - flt(source_doc.delivered_qty)) * \
 			flt(source_doc.rate)
 		target_doc.qty = flt(source_doc.qty) - flt(source_doc.delivered_qty)
+		target_doc.artist = source_doc.artist or frappe.db.get_value('Item', {'name':source_doc.item_code}, 'artist')
 
 	doclist = get_mapped_doc("Sales Invoice", source_name, 	{
 		"Sales Invoice": {
