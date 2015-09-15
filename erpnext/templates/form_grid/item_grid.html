@@ -46,7 +46,7 @@
 			{% if(in_list(["Sales Order Item", "Purchase Order Item"],
 				doc.doctype) && frm.doc.docstatus===1) {
 				var delivered = doc.doctype==="Sales Order Item" ?
-						doc.delivered_qty : doc.received_qty,
+						(doc.delivered_qty || 0.0) : doc.received_qty,
 					completed =
 						100 - cint((doc.qty - delivered) * 100 / doc.qty),
 					title = __("Delivered");
