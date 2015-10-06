@@ -52,7 +52,7 @@ def get_sales_invoice_details(filters):
 		    `tabSales Invoice` a,
 		    `tabSales Invoice Item` b
 		WHERE
-		    b.parent = a.name
+		    b.parent = a.name and a.docstatus <> 2 
 		    %s
 		) as foo group by foo.child_name"""%get_item_conditions(filters),as_list=1, debug=1)
 			
