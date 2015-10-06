@@ -71,5 +71,7 @@ def get_item_conditions(filters):
 		conditions.append("new_order_type='%(new_order_type)s'"%filters)
 	if filters.get("item_group"):
 		conditions.append("b.item_group='%(item_group)s'"%filters)
+	if filters.get("sales_invoice"):
+		conditions.append("a.name='%(sales_invoice)s'"%filters)
 
 	return " and "+" and ".join(conditions) if conditions else ""

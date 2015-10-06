@@ -41,6 +41,12 @@ frappe.query_reports["Spend By Item By Customer"] = {
 			"fieldtype": "Select",
 			"options": "\nStandard Order\nStanding Order\nReader Request"
 		},
+		{
+			"fieldname":"sales_invoice",
+			"label": __("Sales Invoice"),
+			"fieldtype": "Link",
+			"options": "Sales Invoice"
+		},
 		/*{
 			"fieldname":"service_type",
 			"label": __("Service Type"),
