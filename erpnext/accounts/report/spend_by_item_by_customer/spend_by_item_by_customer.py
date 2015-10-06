@@ -39,6 +39,7 @@ def get_sales_invoice_details(filters):
 		    b.item_name as item_name,
 		    b.item_group as item_group,
 		    b.description as description,
+		    b.name as child_name,
 		    b.qty as quantity,
 		    a.budget as budget,
 		    a.new_order_type as order_type,
@@ -53,7 +54,7 @@ def get_sales_invoice_details(filters):
 		WHERE
 		    b.parent = a.name
 		    %s
-		) as foo group by foo.customer_name, foo.item_code"""%get_item_conditions(filters),as_list=1)
+		) as foo group by foo.child_name"""%get_item_conditions(filters),as_list=1, debug=1)
 			
 
 def get_item_conditions(filters):
