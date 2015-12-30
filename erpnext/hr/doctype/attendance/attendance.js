@@ -34,21 +34,20 @@ cur_frm.cscript.out_time = function(doc,cdt,cdn){
 }
 
 cur_frm.cscript.validate = function(doc,cdt,cdn) {
-	cur_frm.cscript.update_total_hour(doc);
+	update_total_hour(doc);
 	//cur_frm.cscript.update_total_break_time(doc);
 }
 
 
-cur_frm.cscript.update_total_hour = function(doc) {
+update_total_hour = function(doc) {
 	var td=0.0;
-	var el = getchildren('Attendance Time Sheets', doc.name, 'attendance_time_sheet');
+	var el = doc.attendance_time_sheet;
+
 	for(var i in el) {
-		td += flt(el[i].hours,42);
+		td += flt(el[i].hours,2);
 	}
-	//console.log(td);
 	var doc = locals[doc.doctype][doc.name];
 	doc.total_hours = td/60;
-	
 	refresh_many(['total_hours']);
 }
 
