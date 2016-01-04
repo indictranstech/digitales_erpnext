@@ -370,7 +370,7 @@ def make_delivery_note(source_name, target_doc=None):
 				"parent": "against_sales_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: ((flt((doc.assigned_qty if doc.assigned_qty else 0)  - (doc.delivered_qty if doc.delivered_qty else 0)) != 0.0) and doc.stop_status!="Yes") if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' and flt(doc.assigned_qty)>0 else ((doc.delivered_qty < doc.qty) and doc.stop_status!="Yes")
+			"condition": lambda doc: ((flt((doc.assigned_qty if doc.assigned_qty else 0)  - (doc.delivered_qty if doc.delivered_qty else 0)) != 0.0) and doc.stop_status!="Yes") if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' and flt(doc.assigned_qty)>0 else ((doc.delivered_qty < doc.qty) and doc.stop_status!="Yes" and doc.qty>0)
 		},
 		"Sales Taxes and Charges": {
 			"doctype": "Sales Taxes and Charges",
