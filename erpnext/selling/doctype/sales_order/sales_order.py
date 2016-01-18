@@ -350,7 +350,7 @@ def make_delivery_note(source_name, target_doc=None):
 	def update_item(source, target, source_parent):
 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
-		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
+		target.qty = flt(source.qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
 		target.line_order_item = source.line_item
 		target.artist = source.artist or frappe.db.get_value('Item', {'name':source.item_code}, 'artist')
@@ -370,7 +370,7 @@ def make_delivery_note(source_name, target_doc=None):
 				"parent": "against_sales_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: ((flt((doc.assigned_qty if doc.assigned_qty else 0)  - (doc.delivered_qty if doc.delivered_qty else 0)) != 0.0) and doc.stop_status!="Yes") if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' and flt(doc.assigned_qty)>0 else ((doc.delivered_qty < doc.qty) and doc.stop_status!="Yes" and doc.qty>0)
+			"condition": lambda doc: ((flt((doc.assigned_qty if doc.assigned_qty else 0)  - (doc.delivered_qty if doc.delivered_qty else 0)) > 0.0) and doc.stop_status!="Yes") if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'Yes' and flt(doc.assigned_qty)>0 and doc.qty>0 else (((doc.delivered_qty < doc.qty) and doc.stop_status!="Yes" and doc.qty>0) if frappe.db.get_value('Item', doc.item_code, 'is_stock_item') == 'No' else flt(doc.assigned_qty) >0)
 		},
 		"Sales Taxes and Charges": {
 			"doctype": "Sales Taxes and Charges",
