@@ -350,7 +350,7 @@ def make_delivery_note(source_name, target_doc=None):
 	def update_item(source, target, source_parent):
 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
-		target.qty = flt(source.qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
+		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty) if frappe.db.get_value('Item', source.item_code, 'is_stock_item') == 'Yes' else source.qty
 		target.assigned_qty = source.assigned_qty
 		target.line_order_item = source.line_item
 		target.artist = source.artist or frappe.db.get_value('Item', {'name':source.item_code}, 'artist')
