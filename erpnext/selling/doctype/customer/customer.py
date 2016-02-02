@@ -180,7 +180,7 @@ def get_contract_details(customer):
 		"contract_no":"",
 		"tender_group":""
 	}
-	contract_details = frappe.db.sql("""SELECT contract_no,tender_group FROM `tabContract Details` WHERE parent='%s' AND is_active=1"""%(customer), as_dict=True)
+	contract_details = frappe.db.sql("""SELECT contract_no,tender_group FROM `tabContract Details` WHERE parent="%s" AND is_active=1"""%(customer), as_dict=True)
 	for details in contract_details:
 		contract_detail.update({
 			"contract_no":details.contract_no,
