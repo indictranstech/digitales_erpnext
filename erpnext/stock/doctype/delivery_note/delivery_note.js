@@ -253,3 +253,4 @@ cur_frm.cscript.send_sms = function() {
 	var sms_man = new SMSManager(cur_frm.doc);
 }
 
+{% include 'digitales/sort_items.js' %}
