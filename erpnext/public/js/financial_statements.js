@@ -1,3 +1,4 @@
+
 frappe.provide("erpnext.financial_statements");
 
 erpnext.financial_statements = {

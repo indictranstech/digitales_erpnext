@@ -120,6 +120,7 @@ def prepare_data(accounts, balance_must_be, period_list):
 	for d in accounts:
 		# add to output
 		has_value = False
+		total = 0
 		row = {
 			"account_name": d.account_name,
 			"account": d.name,
@@ -138,22 +139,31 @@ def prepare_data(accounts, balance_must_be, period_list):
 			if abs(row[period.key]) >= 0.005:
 				# ignore zero values
 				has_value = True
+				total += flt(row[period.key])
 
 		if has_value:
+			row["total"] = total
 			out.append(row)
 
 	return out
 
 def add_total_row(out, balance_must_be, period_list):
-	row = {
+	total_row = {
 		"account_name": _("Total ({0})").format(balance_must_be),
 		"account": None
 	}
-	for period in period_list:
-		row[period.key] = out[0].get(period.key, 0.0)
-		out[0][period.key] = ""
+	for row in out:
+		if not row.get("parent_account"):
+			for period in period_list:
+				total_row.setdefault(period.key, 0.0)
+				total_row[period.key] += row.get(period.key, 0.0)
+				row[period.key] = ""
 
-	out.append(row)
+			total_row.setdefault("total", 0.0)
+			total_row["total"] += flt(row["total"])
+			row["total"] = ""
+
+	out.append(total_row)
 
 	# blank row after Total
 	out.append({})
@@ -234,7 +244,7 @@ def get_gl_entries(company, from_date, to_date, root_lft, root_rgt, ignore_closi
 
 	return gl_entries_by_account
 
-def get_columns(period_list):
+def get_columns(periodicity, period_list):
 	columns = [{
 		"fieldname": "account",
 		"label": _("Account"),
@@ -249,5 +259,11 @@ def get_columns(period_list):
 			"fieldtype": "Currency",
 			"width": 150
 		})
-
+	if periodicity!="Yearly":
+		columns.append({
+			"fieldname": "total",
+			"label": _("Year to Date Total"),
+			"fieldtype": "Currency",
+			"width": 150
+		})
 	return columns
