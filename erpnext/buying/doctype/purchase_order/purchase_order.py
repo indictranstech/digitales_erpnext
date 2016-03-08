@@ -227,7 +227,7 @@ def make_purchase_receipt(source_name, target_doc=None):
 				"parenttype": "prevdoc_doctype",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: doc.received_qty < doc.qty
+			"condition": lambda doc: doc.received_qty < doc.qty and doc.stop_status != "Yes"
 		},
 		"Purchase Taxes and Charges": {
 			"doctype": "Purchase Taxes and Charges",
@@ -263,7 +263,7 @@ def make_purchase_invoice(source_name, target_doc=None):
 				"parent": "purchase_order",
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: doc.base_amount==0 or doc.billed_amt < doc.amount
+			"condition": lambda doc: ( doc.base_amount==0 or doc.billed_amt < doc.amount ) and doc.stop_status != "Yes"
 		},
 		"Purchase Taxes and Charges": {
 			"doctype": "Purchase Taxes and Charges",
