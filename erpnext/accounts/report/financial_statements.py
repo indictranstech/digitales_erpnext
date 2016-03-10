@@ -244,7 +244,7 @@ def get_gl_entries(company, from_date, to_date, root_lft, root_rgt, ignore_closi
 
 	return gl_entries_by_account
 
-def get_columns(periodicity, period_list):
+def get_columns(period_list, periodicity=None):
 	columns = [{
 		"fieldname": "account",
 		"label": _("Account"),
@@ -259,7 +259,7 @@ def get_columns(periodicity, period_list):
 			"fieldtype": "Currency",
 			"width": 150
 		})
-	if periodicity!="Yearly":
+	if periodicity and periodicity!="Yearly":
 		columns.append({
 			"fieldname": "total",
 			"label": _("Year to Date Total"),
