@@ -104,6 +104,10 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 		this.order_type(doc);
 	},
 
+	onload: function() {
+		this.frm.set_value("ignore_pricing_rule", 0);
+	},
+
 	order_type: function() {
 		this.frm.toggle_reqd("delivery_date", this.frm.doc.order_type == "Sales");
 	},

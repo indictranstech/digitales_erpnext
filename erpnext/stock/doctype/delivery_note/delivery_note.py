@@ -340,7 +340,8 @@ def make_sales_invoice(source_name, target_doc=None):
 				"parent": "delivery_note",
 				"prevdoc_detail_docname": "so_detail",
 				"against_sales_order": "sales_order",
-				"serial_no": "serial_no"
+				"serial_no": "serial_no",
+				"line_order_item": "line_item"
 			},
 			"postprocess": update_item,
 			"filter": lambda d: d.qty - invoiced_qty_map.get(d.name, 0)<=0
