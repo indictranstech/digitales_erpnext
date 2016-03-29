@@ -212,22 +212,4 @@ cur_frm.cscript.send_sms = function() {
 }
 
 {% include 'digitales/po_stop.js' %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{% include 'digitales/purchase_order_item.js' %}
