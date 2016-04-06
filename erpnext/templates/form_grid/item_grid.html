@@ -28,6 +28,11 @@
 				{% } else { %}
 					<div><b>Stopped : </b><span style="color:green">No</span></div>
 				{% } %}
+				{% if(doc.doctype=="Sales Order Item") { %}
+					<div><strong>Release Date : </strong><span style="color:green">{%= doc.release_date_of_item %}</span></div>
+				{% } else if(doc.doctype=="Purchase Order Item") { %}
+					<div><strong>Release Date : </strong><span style="color:green">{%= doc.product_release_date %}</span></div>
+				{% } %}
 			{% } %}
 			{% if(doc.schedule_date) { %}
 			<div><span title="{%= __("Reqd By Date") %}" class="label {%=
