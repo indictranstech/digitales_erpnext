@@ -28,9 +28,9 @@
 				{% } else { %}
 					<div><b>Stopped : </b><span style="color:green">No</span></div>
 				{% } %}
-				{% if(doc.doctype=="Sales Order Item") { %}
+				{% if(doc.doctype=="Sales Order Item" && doc.release_date_of_item) { %}
 					<div><strong>Release Date : </strong><span style="color:green">{%= doc.release_date_of_item %}</span></div>
-				{% } else if(doc.doctype=="Purchase Order Item") { %}
+				{% } else if(doc.doctype=="Purchase Order Item" && doc.product_release_date) { %}
 					<div><strong>Release Date : </strong><span style="color:green">{%= doc.product_release_date %}</span></div>
 				{% } %}
 			{% } %}
