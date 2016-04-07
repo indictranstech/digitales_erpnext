@@ -29,19 +29,30 @@
 					<div><b>Stopped : </b><span style="color:green">No</span></div>
 				{% } %}
 				{% if(doc.doctype=="Sales Order Item" && doc.release_date_of_item) { %}
-					<div><strong>Release Date : </strong><span style="color:green">{%= doc.release_date_of_item %}</span></div>
+					<div><span title="{%= __("Reqd By Date") %}" class="label {%=
+					(frappe.datetime.get_diff(doc.schedule_date) < 1
+						&& doc.received_qty < doc.qty)
+						? "label-success" : "label-default" %}">
+						{%= doc.get_formatted("release_date_of_item") %}</span>
+					</div>
 				{% } else if(doc.doctype=="Purchase Order Item" && doc.product_release_date) { %}
-					<div><strong>Release Date : </strong><span style="color:green">{%= doc.product_release_date %}</span></div>
+					<div><span title="{%= __("Reqd By Date") %}" class="label {%=
+					(frappe.datetime.get_diff(doc.schedule_date) < 1
+						&& doc.received_qty < doc.qty)
+						? "label-success" : "label-default" %}">
+						{%= doc.get_formatted("product_release_date") %}</span>
+					</div>
 				{% } %}
 			{% } %}
 			{% if(doc.schedule_date) { %}
-			<div><span title="{%= __("Reqd By Date") %}" class="label {%=
+			<!-- <div><span title="{%= __("Reqd By Date") %}" class="label {%=
 				(frappe.datetime.get_diff(doc.schedule_date) < 1
 					&& doc.received_qty < doc.qty)
 					? "label-danger" : "label-default" %}">
 					{%= doc.get_formatted("schedule_date") %}</span>
-			</div>
+			</div> -->
 			{% } %}
+
 		</div>
 
 		<!-- qty -->
