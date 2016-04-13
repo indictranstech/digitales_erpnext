@@ -36,10 +36,7 @@
 						{%= doc.get_formatted("release_date_of_item") %}</span>
 					</div>
 				{% } else if(doc.doctype=="Purchase Order Item" && doc.product_release_date) { %}
-					<div><span title="{%= __("Reqd By Date") %}" class="label {%=
-					(frappe.datetime.get_diff(doc.schedule_date) < 1
-						&& doc.received_qty < doc.qty)
-						? "label-success" : "label-default" %}">
+					<div><span title="{%= __("Product Release Date") %}" class="label label-success">
 						{%= doc.get_formatted("product_release_date") %}</span>
 					</div>
 				{% } %}
