@@ -121,7 +121,7 @@ class PurchaseOrder(BuyingController):
 				from `tabPurchase Order Item` po_item, `tabPurchase Order` po
 				where po_item.item_code=%s and po_item.warehouse=%s
 				and po_item.qty > ifnull(po_item.received_qty, 0) and po_item.parent=po.name
-				and po.status!='Stopped' and po.docstatus=1""", (item_code, warehouse))
+				and po.status!='Stopped' and ifnull(po_item.stop_status,'No')<>'Yes'and po.docstatus=1""", (item_code, warehouse))
 
 			bin_doc = get_bin(item_code, warehouse)
 			bin_doc.ordered_qty = flt(ordered_qty[0][0]) if ordered_qty else 0
