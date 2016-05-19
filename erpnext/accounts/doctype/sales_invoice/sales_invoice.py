@@ -112,8 +112,8 @@ class SalesInvoice(SellingController):
 			#frappe.errprint(d)
 			if d.process_id:
 				#frappe.errprint(d.process_id)
-				frappe.db.sql("""update `tabProcess` set sales_invoice_status='Done' where
-								name='%s'"""%d.process_id)
+				frappe.db.sql("""update `tabProcess` set sales_invoice_status = 'Done', sales_invoice = '%s' where
+								name='%s'"""%(d.parent, d.process_id))
 				frappe.db.commit()
 			else:
 				pass

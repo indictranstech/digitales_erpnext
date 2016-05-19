@@ -312,9 +312,3 @@ cur_frm.cscript.sales_person = function(doc,cdt, cdn){
 
 {% include 'digitales/custom_js_methods.js' %}
 $.extend(cur_frm.cscript, new erpnext.selling.CustomSalesOrder());
-
-
-
-
-
-

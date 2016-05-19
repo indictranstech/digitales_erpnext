@@ -104,6 +104,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 		if (doc.docstatus===0 && !this.pos_active) {
 			cur_frm.cscript.sales_order_btn();
 			cur_frm.cscript.delivery_note_btn();
+			cur_frm.cscript.get_process_btn();
 		}
 	},
 
@@ -143,6 +144,25 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 						};
 					}
 				});
+			}, "icon-download", "btn-default");
+	},
+
+	get_process_btn: function() {
+		this.$get_process_btn = cur_frm.appframe.add_primary_action(__('Get Processes'),
+			function() {
+				if(!cur_frm.doc.customer)
+					msgprint("Please Select the Customer first")
+				else {
+					frappe.model.map_current_doc({
+						method: "digitales.digitales.process.make_sales_invoice",
+						source_doctype: "Process",
+						get_query_filters: {
+							docstatus: 1,
+							sales_invoice_status: ["=", "Not Done"],
+							customer_id: cur_frm.doc.customer
+						}
+					})
+				}
 			}, "icon-download", "btn-default");
 	},
 
