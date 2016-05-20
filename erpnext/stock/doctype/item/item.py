@@ -291,7 +291,6 @@ class Item(WebsiteGenerator):
 			}
 
 		else:
-			
 			frappe.msgprint("Please specify default own warehouse in Configuration Page",raise_exception=1)
 
 

@@ -21,9 +21,9 @@ date_field_map = {
 
 def create_recurring_documents():
 	manage_recurring_documents("Sales Order")
-	manage_recurring_documents("Sales Invoice")
-	manage_recurring_documents("Purchase Order")
-	manage_recurring_documents("Purchase Invoice")
+	# manage_recurring_documents("Sales Invoice")
+	# manage_recurring_documents("Purchase Order")
+	# manage_recurring_documents("Purchase Invoice")
 
 def manage_recurring_documents(doctype, next_date=None, commit=True):
 	"""
@@ -58,8 +58,7 @@ def manage_recurring_documents(doctype, next_date=None, commit=True):
 					frappe.db.rollback()
 
 					frappe.db.begin()
-					frappe.db.sql("update `tab%s` \
-						set is_recurring = 0 where name = %s" % (doctype, '%s'),
+					frappe.db.sql("update `tab%s` set is_recurring = 0 where name = %s" % (doctype, '%s'),
 						(ref_document))
 					notify_errors(ref_document, doctype, ref_wrapper.get("customer") or ref_wrapper.get("supplier"),
 						ref_wrapper.owner)
@@ -98,6 +97,9 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 		"to_date": to_date,
 		"fiscal_year": get_fiscal_year(posting_date)[0],
 		"owner": ref_wrapper.owner,
+		"docstatus":0,
+		"per_billed": 0,
+		"per_delivered": 0,
 	})
 
 	if ref_wrapper.doctype == "Sales Order":
@@ -106,7 +108,7 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 				cint(ref_wrapper.repeat_on_day_of_month))
 	})
 
-	new_document.submit()
+	new_document.save()
 
 	return new_document
 
@@ -187,8 +189,7 @@ def validate_notification_email_id(doc):
 		from frappe.utils import validate_email_add
 		for email in email_list:
 			if not validate_email_add(email):
-				throw(_("{0} is an invalid email address in 'Notification \
-					Email Address'").format(email))
+				throw(_("{0} is an invalid email address in 'Notification Email Address'").format(email))
 
 	else:
 		frappe.throw(_("'Notification Email Addresses' not specified for recurring %s") \

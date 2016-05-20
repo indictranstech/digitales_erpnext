@@ -394,7 +394,7 @@ def make_sales_invoice(source_name, target_doc=None):
 		# To get process details against sales order for which you are generating sales invoice---------
 		if source.doctype=='Sales Order':
 			#frappe.errprint("2 doctype is sales order")
-			get_shelf_service_details(source,source_name,target)
+			# get_shelf_service_details(source,source_name,target)
 			set_missing_values(source, target)
 			target.get_advances()
 			#update_item(source,target,source_parent)

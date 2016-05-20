@@ -11,7 +11,7 @@ default_mail_footer = """<div style="padding: 7px; text-align: right; color: #88
 	<a style="color: #888" href="http://erpnext.org">ERPNext</a></div>"""
 
 def after_install():
-	frappe.get_doc({'doctype': "Role", "role_name": "Analytics"}).insert()
+	#frappe.get_doc({'doctype': "Role", "role_name": "Analytics"}).insert()
 	set_single_defaults()
 	import_country_and_currency()
 	from erpnext.accounts.doctype.chart_of_accounts.import_charts import import_charts
