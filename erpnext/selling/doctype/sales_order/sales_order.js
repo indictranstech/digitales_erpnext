@@ -104,10 +104,6 @@ erpnext.selling.SalesOrderController = erpnext.selling.SellingController.extend(
 		this.order_type(doc);
 	},
 
-	onload: function() {
-		this.frm.set_value("ignore_pricing_rule", 0);
-	},
-
 	order_type: function() {
 		this.frm.toggle_reqd("delivery_date", this.frm.doc.order_type == "Sales");
 	},
@@ -316,9 +312,3 @@ cur_frm.cscript.sales_person = function(doc,cdt, cdn){
 
 {% include 'digitales/custom_js_methods.js' %}
 $.extend(cur_frm.cscript, new erpnext.selling.CustomSalesOrder());
-
-
-
-
-
-
