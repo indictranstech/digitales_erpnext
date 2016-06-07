@@ -41,14 +41,16 @@ cur_frm.cscript.validate = function(doc,cdt,cdn) {
 
 update_total_hour = function(doc) {
 	var td=0.0;
+	var min = 0.0
 	var el = doc.attendance_time_sheet;
 
 	for(var i in el) {
 		td += flt(el[i].hours,2);
 	}
 	var doc = locals[doc.doctype][doc.name];
-	doc.total_hours = td/60;
-	refresh_many(['total_hours']);
+	doc.total_hours = Math.floor(td/60);
+	doc.minutes =  td%60;
+	refresh_many(['total_hours','minutes']);
 }
 
 cur_frm.cscript.refresh=function(doc,cdt,cdn){
