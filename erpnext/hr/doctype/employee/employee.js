@@ -67,3 +67,9 @@ cur_frm.cscript.digitales_salary_structure=function(doc,cdt,cdn){
 		unhide_field('hour_rate');
 	}
 }
+
+cur_frm.fields_dict["attendance_approver"].grid.get_field("attendance_approver").get_query = function(doc) {
+	return {
+		query: "erpnext.hr.doctype.employee.employee.attendance_approver_query",
+	}
+}

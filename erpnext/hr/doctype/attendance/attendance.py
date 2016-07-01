@@ -4,10 +4,12 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.utils import add_days, cint, cstr
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate,get_url_to_form
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils.user import get_user_fullname
 from erpnext.hr.utils import set_employee_name
+from frappe import sendmail
 
 class Attendance(Document):
 	def validate_duplicate_record(self):
@@ -54,6 +56,7 @@ class Attendance(Document):
 		self.validate_time()
 		self.validate_att_joining_date()
 		self.validate_attendance_timing()
+		self.validate_workflow()
 
 	def validate_attendance_timing(self):
 		# frappe.errprint("in validate attendance timing")
@@ -149,3 +152,52 @@ class Attendance(Document):
 		return{	
 		"hours": diff.seconds/60
 		}
+
+	def validate_workflow(self):
+		user  = get_user_fullname(frappe.session.user)
+		if self.workflow_state == "Sent" and user == self.employee_name and self.workflow_state != "Send for Approval":
+			sub = "Sent"
+			self.send_mail(sub)
+
+	def on_submit(self):
+		user = frappe.session.user
+		approver = frappe.db.sql("""select attendance_approver from `tabAttendance Approver` where parent = '%s' and attendance_approver = '%s'"""%(self.employee,user))
+		if not approver:
+				frappe.throw(_("Only Attendance Approver can Approved this"))
+		else:
+			frappe.db.set_value("Attendance", self.name, "approved_by", user)
+			sub = "Approved"
+			self.send_mail(sub)
+
+	def on_cancel(self):
+		frappe.db.set_value("Attendance", self.name, "workflow_state", "Cancelled")
+
+	def send_mail(self,sub):
+		user_id = frappe.db.get_value("Employee", {"name": self.employee},"user_id")
+		employee_email = frappe.db.get_value("User",{"name":user_id},"email")
+		url = get_url_to_form(self.doctype, self.name)
+		user = frappe.session.user
+
+		if sub == "Sent":
+			approver = frappe.db.sql("""select attendance_approver from `tabAttendance Approver` where parent = '%s'"""%(self.employee),as_list=1)
+			recipients = [a[0].encode('ascii','ignore') for a in approver if a[0].encode('ascii','ignore') != "Administrator"]
+			recipients.append(employee_email)
+			subject = "Attendance Sent for Approval"
+			template = "templates/emails/attendance_sent.html"
+			data = {"employee":self.employee_name, "date":self.att_date,"url":url}
+			message = frappe.get_template(template).render({"data":data})
+			frappe.sendmail(recipients, subject=subject, message=message)
+
+		if sub == "Approved":
+			recipients = [employee_email]
+			if user != "Administrator": recipients.append(user)
+			template = "templates/emails/attendance_approved.html"
+			data = {"employee":self.employee_name, "date":self.att_date, "approver":user,"url":url}
+			subject = "Attendance Approved"
+			message = frappe.get_template(template).render({"data":data})
+			frappe.sendmail(recipients, subject=subject, message=message)
+
+def user_validation(doc,method):
+	user  = get_user_fullname(frappe.session.user)
+	if (user != doc.employee_name) and (doc.workflow_state == "Send for Approval" and doc.workflow_state != "Sent"):
+		frappe.throw("Employee Can only send self Attendance for Approval")
