@@ -219,3 +219,11 @@ def update_user_permissions(doc, method):
 	if "Employee" in [d.role for d in doc.get("user_roles")]:
 		employee = frappe.get_doc("Employee", {"user_id": doc.name})
 		employee.update_user_permissions()
+
+def attendance_approver_query(doctype, txt, searchfield, start, page_len, filters):
+	cond = ""
+	if txt:
+		cond = "and ur.parent like '%{0}%'".format(txt)
+
+	return frappe.db.sql("""select distinct u.name from `tabUser` u, `tabUserRole` ur
+			where u.name = ur.parent and ur.role = 'HR Manager' %s"""%(cond))
