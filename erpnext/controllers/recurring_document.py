@@ -100,6 +100,7 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 		"docstatus":0,
 		"per_billed": 0,
 		"per_delivered": 0,
+		"billed_amt": 0,
 	})
 
 	if ref_wrapper.doctype == "Sales Order":
@@ -191,9 +192,9 @@ def validate_notification_email_id(doc):
 			if not validate_email_add(email):
 				throw(_("{0} is an invalid email address in 'Notification Email Address'").format(email))
 
-	else:
-		frappe.throw(_("'Notification Email Addresses' not specified for recurring %s") \
-			% doc.doctype)
+	# else:
+	# 	frappe.throw(_("'Notification Email Addresses' not specified for recurring %s") \
+	# 		% doc.doctype)
 
 def set_next_date(doc, posting_date):
 	""" Set next date on which recurring document will be created"""
