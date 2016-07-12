@@ -143,9 +143,13 @@ class Attendance(Document):
 
 	def get_hours(self,args):
 		import datetime as dt
-		start_dt = dt.datetime.strptime(args['in_time'], '%H:%M:%S')
-		end_dt = dt.datetime.strptime(args['out_time'], '%H:%M:%S')
-		diff = (end_dt - start_dt) 
-		return{	
-		"hours": diff.seconds/60
-		}
+		try:
+			start_dt = dt.datetime.strptime(args['in_time'], '%H:%M:%S')
+			end_dt = dt.datetime.strptime(args['out_time'], '%H:%M:%S')
+			diff = (end_dt - start_dt)
+			return{
+			"hours": diff.seconds/60
+			}
+
+		except Exception, e:
+			frappe.msgprint("Enter Valid Time")
