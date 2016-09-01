@@ -50,7 +50,7 @@ def manage_recurring_documents(doctype, next_date=None, commit=True):
 					ref_wrapper.before_recurring()
 
 				new_document_wrapper = make_new_document(ref_wrapper, date_field, next_date)
-				# send_notification(new_document_wrapper)
+				send_notification(new_document_wrapper)
 				if commit:
 					frappe.db.commit()
 			except:
@@ -135,7 +135,7 @@ def send_notification(new_rv):
 		message = _("Please find attached {0} #{1}").format(new_rv.doctype, new_rv.name),
 		attachments = [{
 			"fname": new_rv.name + ".pdf",
-			# "fcontent": frappe.get_print_format(new_rv.doctype, new_rv.name, as_pdf=True)
+			"fcontent": frappe.get_print_format(new_rv.doctype, new_rv.name, as_pdf=True)
 		}])
 
 def notify_errors(doc, doctype, party, owner):
