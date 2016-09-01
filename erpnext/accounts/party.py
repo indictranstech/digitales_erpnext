@@ -28,7 +28,7 @@ def _get_party_details(party=None, account=None, party_type="Customer", company=
 
 	party = frappe.get_doc(party_type, party)
 
-	set_address_details(out, party, party_type)
+	set_address_details(out, party, party_type, doctype)
 	set_contact_details(out, party, party_type)
 	set_other_values(out, party, party_type)
 	set_price_list(out, party, party_type, price_list)
@@ -46,7 +46,7 @@ def _get_party_details(party=None, account=None, party_type="Customer", company=
 
 	return out
 
-def set_address_details(out, party, party_type):
+def set_address_details(out, party, party_type, doctype=None):
 	billing_address_field = "customer_address" if party_type == "Lead" \
 		else party_type.lower() + "_address"
 	out[billing_address_field] = frappe.db.get_value("Address",
@@ -60,6 +60,12 @@ def set_address_details(out, party, party_type):
 		out.shipping_address_name = frappe.db.get_value("Address",
 			{party_type.lower(): party.name, "is_shipping_address":1}, "name")
 		out.shipping_address = get_address_display(out["shipping_address_name"])
+
+		# For Billing Address in SI
+		if doctype == "Sales Invoice":
+			out.customer_address = frappe.db.get_value("Address",
+				{party_type.lower(): party.name, "is_primary_address":1}, "name")
+			out.bill_to_address = get_address_display(out["customer_address"])
 
 def set_contact_details(out, party, party_type):
 	out.contact_person = frappe.db.get_value("Contact",
