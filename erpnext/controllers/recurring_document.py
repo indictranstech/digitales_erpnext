@@ -103,13 +103,19 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 		"billed_amt": 0,
 	})
 
+	for item in new_document.entries:
+		a=frappe.db.get_value('Item Price', {'item_code': item.item_code, 'price_list': new_document.selling_price_list}, 'price_list_rate', as_dict=1)
+		if a:
+			item.rate=a['price_list_rate']
+
 	if ref_wrapper.doctype == "Sales Order":
 		new_document.update({
 			"delivery_date": get_next_date(ref_wrapper.delivery_date, mcount,
 				cint(ref_wrapper.repeat_on_day_of_month))
 	})
 
-	new_document.save()
+	abc = new_document.save()
+	print "asss"
 
 	return new_document
 
