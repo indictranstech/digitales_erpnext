@@ -46,7 +46,7 @@ class Attendance(Document):
 	def validate(self):
 		# frappe.errprint("in validate")
 		from erpnext.utilities import validate_status
-		validate_status(self.status, ["Present", "Absent", "Half Day"])
+		validate_status(self.status, ["Present", "Absent", "Half Day", "Pending approval", "Approved"])
 		self.validate_fiscal_year()
 		self.validate_att_date()
 		self.validate_duplicate_record()
