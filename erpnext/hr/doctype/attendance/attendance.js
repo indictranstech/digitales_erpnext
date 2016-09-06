@@ -70,3 +70,7 @@ cur_frm.cscript.status=function(doc,cdt,cdn){
 		hide_field('total_hours');
 	}
 }
+
+cur_frm.cscript.on_submit=function(doc,cdt,cdn){
+	cur_frm.reload_doc();
+}
