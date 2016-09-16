@@ -293,49 +293,6 @@ def make_material_request(source_name, target_doc=None):
 
 	return doc
 
-# @frappe.whitelist()
-# def make_delivery_note(source_name, target_doc=None):
-# 	def set_missing_values(source, target):
-# 		target.ignore_pricing_rule = 1
-# 		target.run_method("set_missing_values")
-# 		target.run_method("calculate_taxes_and_totals")
-
-# 	def update_item(source, target, source_parent):
-# 		target.base_amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.base_rate)
-# 		target.amount = (flt(source.qty) - flt(source.delivered_qty)) * flt(source.rate)
-# 		# target.qty = flt(source.qty) - flt(source.delivered_qty)
-# 		target.qty = flt(source.assigned_qty) - flt(source.delivered_qty)
-# 		target.assigned_qty = source.assigned_qty
-
-# 	target_doc = get_mapped_doc("Sales Order", source_name, {
-# 		"Sales Order": {
-# 			"doctype": "Delivery Note",
-# 			"validation": {
-# 				"docstatus": ["=", 1]
-# 			}
-# 		},
-# 		"Sales Order Item": {
-# 			"doctype": "Delivery Note Item",
-# 			"field_map": {
-# 				"rate": "rate",
-# 				"name": "prevdoc_detail_docname",
-# 				"parent": "against_sales_order",
-# 			},
-# 			"postprocess": update_item,
-# 			"condition": lambda doc: doc.delivered_qty < doc.qty
-# 		},
-# 		"Sales Taxes and Charges": {
-# 			"doctype": "Sales Taxes and Charges",
-# 			"add_if_empty": True
-# 		},
-# 		"Sales Team": {
-# 			"doctype": "Sales Team",
-# 			"add_if_empty": True
-# 		}
-# 	}, target_doc, set_missing_values)
-
-# 	return target_doc
-
 # by pitambar
 @frappe.whitelist()
 def make_delivery_note(source_name, target_doc=None):
@@ -389,12 +346,8 @@ def make_sales_invoice(source_name, target_doc=None):
 	def postprocess(source, target):
 
 		set_missing_values(source, target)
-		#Get the advance paid Journal Vouchers in Sales Invoice Advance
 		target.get_advances()
-		# To get process details against sales order for which you are generating sales invoice---------
 		if source.doctype=='Sales Order':
-			#frappe.errprint("2 doctype is sales order")
-			# get_shelf_service_details(source,source_name,target)
 			set_missing_values(source, target)
 			target.get_advances()
 			#update_item(source,target,source_parent)
@@ -428,16 +381,11 @@ def make_sales_invoice(source_name, target_doc=None):
 				si.item_name=i[0]
 				si.description=i[0]
 				si.qty=i[1]
-				#si.rate=i[2]
-				#si.amount=i[3]
-				#si.shelf_ready_service_name=i[0]
 				if i[2]!=None:
 					si.marcfile_name=i[2]
 				else:
 					si.marcfile_name=""
 				si.sales_order=source_name
-				#si.income_account='Sales - D'
-				#si.cost_center='Main - D'
 				si.process_id= name
 				#update_process_entry(name)
 
@@ -445,6 +393,11 @@ def make_sales_invoice(source_name, target_doc=None):
 		target.is_pos = 0
 		target.ignore_pricing_rule = 1
 		target.run_method("set_missing_values")
+
+		# set billing address
+		if target.customer_address:
+			target.bill_to_address = get_address_display(target.customer_address)
+
 		target.run_method("calculate_taxes_and_totals")
 		if cint(source.is_recurring) == 1:
 			target.is_recurring = source.is_recurring
