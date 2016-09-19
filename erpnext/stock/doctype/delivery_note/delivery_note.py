@@ -310,6 +310,8 @@ def get_invoiced_qty_map(delivery_note):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
+	from erpnext.utilities.doctype.address.address import get_address_display
+
 	invoiced_qty_map = get_invoiced_qty_map(source_name)
 
 	def update_accounts(source, target):
