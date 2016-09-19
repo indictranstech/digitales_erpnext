@@ -343,6 +343,8 @@ def make_delivery_note(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None):
+	from erpnext.utilities.doctype.address.address import get_address_display
+
 	def postprocess(source, target):
 
 		set_missing_values(source, target)
