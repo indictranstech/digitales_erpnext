@@ -104,9 +104,9 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 	})
 
 	for item in new_document.entries:
-		a=frappe.db.get_value('Item Price', {'item_code': item.item_code, 'price_list': new_document.selling_price_list}, 'price_list_rate', as_dict=1)
-		if a:
-			item.rate=a['price_list_rate']
+		item_price = frappe.db.get_value('Item Price', {'item_code': item.item_code, 'price_list': new_document.selling_price_list}, 'price_list_rate', as_dict=True)
+		if item_price:
+			item.rate=item_price,get('price_list_rate', 0)
 
 	if ref_wrapper.doctype == "Sales Order":
 		new_document.update({
@@ -114,8 +114,7 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 				cint(ref_wrapper.repeat_on_day_of_month))
 	})
 
-	abc = new_document.save()
-	print "asss"
+	new_document.save()
 
 	return new_document
 
