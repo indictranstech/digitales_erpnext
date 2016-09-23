@@ -101,6 +101,7 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 		"per_billed": 0,
 		"per_delivered": 0,
 		"billed_amt": 0,
+		"delivery_status": "Not Delivered"
 	})
 
 	new_document.set("sales_order_details", [])
