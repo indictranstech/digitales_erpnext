@@ -103,10 +103,16 @@ def make_new_document(ref_wrapper, date_field, posting_date):
 		"billed_amt": 0,
 	})
 
-	for item in new_document.entries:
+	new_document.set("sales_order_details", [])
+
+	for item in ref_wrapper.sales_order_details:
+		new_item = new_document.append('sales_order_details', {})
+		new_item.item_code = item.item_code
+		new_item.qty = item.qty
+
 		item_price = frappe.db.get_value('Item Price', {'item_code': item.item_code, 'price_list': new_document.selling_price_list}, 'price_list_rate', as_dict=True)
 		if item_price:
-			item.rate=item_price,get('price_list_rate', 0)
+			new_item.rate = item_price.get('price_list_rate', 0)
 
 	if ref_wrapper.doctype == "Sales Order":
 		new_document.update({
