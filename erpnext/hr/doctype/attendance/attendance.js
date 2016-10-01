@@ -5,6 +5,52 @@ cur_frm.add_fetch('employee', 'company', 'company');
 cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
 cur_frm.add_fetch('employee','attendance_approver','attendance_approver')
 
+frappe.ui.form.on("Attendance", "refresh", function(frm) {
+	if(!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver) {
+		cur_frm.add_custom_button(__('Send for Approval'),
+		function() {
+			frappe.call({
+				method: "digitales.digitales.custom_methods.send_mail_to_approver",
+				args: {
+					'doctype':"Attendance",
+					'doc_name': cur_frm.doc.name,
+					'att_date':cur_frm.doc.att_date,
+					'employee_name':cur_frm.doc.employee_name,
+					'attendance_approver':cur_frm.doc.attendance_approver,
+					'send_mail_to_approver':cur_frm.doc.send_mail_to_approver
+				},
+				callback: function(r) {
+					if(r.message == "Success"){
+						cur_frm.set_value("send_mail_to_approver",1)
+						cur_frm.save();
+					}
+				}
+			})
+		}, "icon-exclamation", "btn-default send_mail_to_approver");
+	}
+	if((!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver == user) || cur_frm.doc.send_mail_to_approver == 1){
+		$('button.send_mail_to_approver').hide();
+	}
+	if(cur_frm.doc.employee){
+		frappe.call({
+			method: "digitales.digitales.custom_methods.get_attendance_approver",
+			args:{
+				"employee":cur_frm.doc.employee
+				},
+				callback: function(res){
+				if(res && res.message){
+					cur_frm.set_value("attendance_approver",res.message[0])
+					cur_frm.set_value("employee_name",res.message[1])
+				}
+			}
+		});
+	}
+});
+
+
+
+
+
 cur_frm.cscript.onload = function(doc, cdt, cdn) {
 	if(doc.__islocal) cur_frm.set_value("att_date", get_today());
 }
