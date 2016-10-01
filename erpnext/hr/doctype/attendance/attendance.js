@@ -47,10 +47,6 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 	}
 });
 
-
-
-
-
 cur_frm.cscript.onload = function(doc, cdt, cdn) {
 	if(doc.__islocal) cur_frm.set_value("att_date", get_today());
 }
