@@ -6,7 +6,7 @@ cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
 cur_frm.add_fetch('employee','attendance_approver','attendance_approver')
 
 frappe.ui.form.on("Attendance", "refresh", function(frm) {
-	if(!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver) {
+	if(!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver && in_list(user_roles, "Employee")) {
 		cur_frm.add_custom_button(__('Send for Approval'),
 		function() {
 			frappe.call({
@@ -18,12 +18,6 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 					'employee_name':cur_frm.doc.employee_name,
 					'attendance_approver':cur_frm.doc.attendance_approver,
 					'send_mail_to_approver':cur_frm.doc.send_mail_to_approver
-				},
-				callback: function(r) {
-					if(r.message == "Success"){
-						cur_frm.set_value("send_mail_to_approver",1)
-						cur_frm.save();
-					}
 				}
 			})
 		}, "icon-exclamation", "btn-default send_mail_to_approver");
@@ -46,6 +40,15 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 		});
 	}
 });
+
+
+frappe.ui.form.on("Attendance", "validate", function(frm) {
+	if(cur_frm.doc.send_mail_to_approver == 1 && cur_frm.doc.__unsaved){
+		cur_frm.reload_doc();
+		frappe.throw("You can't edit after sent for approval")
+	}
+})
+
 
 cur_frm.cscript.onload = function(doc, cdt, cdn) {
 	if(doc.__islocal) cur_frm.set_value("att_date", get_today());
