@@ -10,6 +10,7 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 		cur_frm.add_custom_button(__('Send for Approval'),
 		function() {
 			frappe.call({
+				freeze: true,
 				method: "digitales.digitales.custom_methods.send_mail_to_approver",
 				args: {
 					'doctype':"Attendance",
@@ -18,6 +19,12 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 					'employee_name':cur_frm.doc.employee_name,
 					'attendance_approver':cur_frm.doc.attendance_approver,
 					'send_mail_to_approver':cur_frm.doc.send_mail_to_approver
+				},
+				callback: function(r) {
+					if(r.message){
+						cur_frm.reload_doc();
+						msgprint(__("Your attendance has been sent for approval to: {0}", [cur_frm.doc.attendance_approver]))
+					}
 				}
 			})
 		}, "icon-exclamation", "btn-default send_mail_to_approver");
