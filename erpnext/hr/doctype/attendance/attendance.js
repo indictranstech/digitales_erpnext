@@ -6,32 +6,35 @@ cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
 cur_frm.add_fetch('employee','attendance_approver','attendance_approver')
 
 frappe.ui.form.on("Attendance", "refresh", function(frm) {
-	if(!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver && in_list(user_roles, "Employee")) {
+	if(!cur_frm.doc.__islocal && in_list(user_roles, "Employee") && cur_frm.doc.send_mail_to_approver == 0) {
 		cur_frm.add_custom_button(__('Send for Approval'),
 		function() {
-			frappe.call({
-				freeze: true,
-				method: "digitales.digitales.custom_methods.send_mail_to_approver",
-				args: {
-					'doctype':"Attendance",
-					'doc_name': cur_frm.doc.name,
-					'att_date':cur_frm.doc.att_date,
-					'employee_name':cur_frm.doc.employee_name,
-					'attendance_approver':cur_frm.doc.attendance_approver,
-					'send_mail_to_approver':cur_frm.doc.send_mail_to_approver
-				},
-				callback: function(r) {
-					if(r.message){
-						cur_frm.reload_doc();
-						msgprint(__("Your attendance has been sent for approval to: {0}", [cur_frm.doc.attendance_approver]))
+			if(cur_frm.doc.attendance_approver) {
+				frappe.call({
+					freeze: true,
+					method: "digitales.digitales.custom_methods.send_mail_to_approver",
+					args: {
+						'doctype':"Attendance",
+						'doc_name': cur_frm.doc.name,
+						'att_date':cur_frm.doc.att_date,
+						'employee_name':cur_frm.doc.employee_name,
+						'attendance_approver':cur_frm.doc.attendance_approver,
+						'send_mail_to_approver':cur_frm.doc.send_mail_to_approver
+					},
+					callback: function(r) {
+						if(r.message){
+							cur_frm.reload_doc();
+							msgprint(__("Your attendance has been sent for approval to: {0}", [cur_frm.doc.attendance_approver]))
+						}
 					}
-				}
-			})
+				})
+			}
+			else
+				frappe.throw("Please set Attendance Approver on Employee form")
+
 		}, "icon-exclamation", "btn-default send_mail_to_approver");
 	}
-	if((!cur_frm.doc.__islocal && cur_frm.doc.attendance_approver == user) || cur_frm.doc.send_mail_to_approver == 1){
-		$('button.send_mail_to_approver').hide();
-	}
+
 	if(cur_frm.doc.employee){
 		frappe.call({
 			method: "digitales.digitales.custom_methods.get_attendance_approver",
