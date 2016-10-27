@@ -6,7 +6,8 @@ cur_frm.add_fetch('employee', 'employee_name', 'employee_name');
 cur_frm.add_fetch('employee','attendance_approver','attendance_approver')
 
 frappe.ui.form.on("Attendance", "refresh", function(frm) {
-	if(!cur_frm.doc.__islocal && in_list(user_roles, "Employee") && cur_frm.doc.send_mail_to_approver == 0) {
+	if(!cur_frm.doc.__islocal && in_list(user_roles, "Employee") && cur_frm.doc.send_mail_to_approver == 0 &&
+		cur_frm.doc.docstatus != 1) {
 		cur_frm.add_custom_button(__('Send for Approval'),
 		function() {
 			if(cur_frm.doc.attendance_approver) {
@@ -35,7 +36,7 @@ frappe.ui.form.on("Attendance", "refresh", function(frm) {
 		}, "icon-exclamation", "btn-default send_mail_to_approver");
 	}
 
-	if(cur_frm.doc.employee){
+	if(cur_frm.doc.employee && cur_frm.doc.docstatus != 1){
 		frappe.call({
 			method: "digitales.digitales.custom_methods.get_attendance_approver",
 			args:{
