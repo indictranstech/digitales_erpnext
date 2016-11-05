@@ -73,6 +73,13 @@ class SellingController(StockController):
 
 			shipping_amount = 0.0
 			for condition in shipping_rule.get("shipping_rule_conditions"):
+				if self.doctype == "Delivery Note" and condition.calculate_based_on == "Net Weight":
+					# get net weight
+					value = 0
+					for item in self.delivery_note_details:
+						net_wt = frappe.db.get_value("Item", item.item_code, "net_weight") or 0.0
+						value += float(item.qty or 0.0) * net_wt
+
 				if not condition.to_value or (flt(condition.from_value) <= value <= flt(condition.to_value)):
 					shipping_amount = condition.shipping_amount
 					break
