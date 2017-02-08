@@ -81,6 +81,7 @@ class SellingController(StockController):
 						net_wt = frappe.db.get_value("Item", item.item_code, "net_weight") or 0.0
 						value += float(item.qty or 0.0) * net_wt
 
+
 				if not condition.to_value or (flt(condition.from_value) <= value <= flt(condition.to_value)):
 					shipping_amount = condition.shipping_amount
 					break
